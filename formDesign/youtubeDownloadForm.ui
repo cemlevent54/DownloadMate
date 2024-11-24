@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>Segoe Script</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+                background-color: #FFCCCC; /* Hafif kırmızı arka plan */
+            }</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="headerLabel">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>70</y>
+      <width>271</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Download Youtube Videos</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="linkTxtBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>150</y>
+      <width>551</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="formatGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>230</y>
+      <width>171</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+     </font>
+    </property>
+    <property name="title">
+     <string>Format</string>
+    </property>
+    <widget class="QRadioButton" name="mp4Radio">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>80</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe Script</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>mp4</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="mp3Radio">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe Script</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>mp3</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="searchButton">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>150</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                background-color: #FFFFFF; /* Beyaz arka plan */
+                color: #FF0000; /* Kırmızı yazı */
+                font-size: 14px;
+                font-weight: bold;
+                border: 2px solid #FF0000; /* Kırmızı kenar */
+                border-radius: 8px; /* Hafif yuvarlak kenarlar */
+                padding: 6px;
+            }
+            QPushButton:hover {
+                background-color: #FF4C4C; /* Hover sırasında açık kırmızı */
+                color: #FFFFFF; /* Yazı beyaz */
+                border: 2px solid #FF0000;
+            }
+            QPushButton:pressed {
+                background-color: #CC0000; /* Basılınca koyu kırmızı */
+                color: #FFFFFF;
+            }</string>
+    </property>
+    <property name="text">
+     <string>Search Link</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="qualityGroupbox">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>230</y>
+      <width>201</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+     </font>
+    </property>
+    <property name="title">
+     <string>Quality</string>
+    </property>
+    <widget class="QRadioButton" name="mp4Radio_4">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>80</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe Script</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>480p</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="mp3Radio_4">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>40</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe Script</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>360p</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="mp4Radio_5">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>120</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe Script</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>720p</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="mp4Radio_6">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>160</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe Script</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>1080p</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="downloadsLabel">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>400</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                background-color: #FFFFFF; /* Beyaz arka plan */
+                color: #FF0000; /* Kırmızı yazı */
+                font-size: 14px;
+                font-weight: bold;
+                border: 2px solid #FF0000; /* Kırmızı kenar */
+                border-radius: 8px; /* Hafif yuvarlak kenarlar */
+                padding: 6px;
+            }
+            QPushButton:hover {
+                background-color: #FF4C4C; /* Hover sırasında açık kırmızı */
+                color: #FFFFFF; /* Yazı beyaz */
+                border: 2px solid #FF0000;
+            }
+            QPushButton:pressed {
+                background-color: #CC0000; /* Basılınca koyu kırmızı */
+                color: #FFFFFF;
+            }</string>
+    </property>
+    <property name="text">
+     <string>Downloads</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="resultLabel">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>240</y>
+      <width>151</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

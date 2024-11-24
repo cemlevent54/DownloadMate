@@ -26,12 +26,10 @@ class YouTubeDownloader:
         """
         İndirme klasörü oluşturur.
         """
-        folder_name = "downloads"
+        folder_name = "youtubeDownloads"
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
             print(f"'{folder_name}' klasörü oluşturuldu.")
-        else:
-            print(f"'{folder_name}' klasörü zaten mevcut.")
         return folder_name
 
     def sanitize_filename(self, filename):

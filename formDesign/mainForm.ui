@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DownloadMate</class>
+ <widget class="QMainWindow" name="DownloadMate">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>DownloadMate</string>
+  </property>
+  <property name="statusTip">
+   <string/>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: #F5F5F5; /* Hafif gri (Örnek) */
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QWidget {
+    background-color: #D3D3D3; /* Hafif gri (Örnek) */
+}
+</string>
+   </property>
+   <widget class="QPushButton" name="youtubeDownloader">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>150</y>
+      <width>301</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: #FF4C4C; /* Kırmızı buton rengi */
+    color: white;             /* Yazı rengi */
+    font-size: 16px;          /* Yazı boyutu */
+    font-weight: bold;        /* Kalın yazı */
+    border: none;             /* Çerçeve kaldırıldı */
+    border-radius: 25px;      /* Tam yuvarlak köşeler */
+    padding: 12px 24px;       /* İç boşluk */
+    transition: all 0.3s ease; /* Geçiş efekti */
+    text-transform: uppercase; /* Yazıyı büyük harf yapar */
+    letter-spacing: 1px;      /* Yazı aralığı */
+    box-shadow: 0px 5px 15px rgba(255, 76, 76, 0.4); /* Hafif gölge efekti */
+}
+
+QPushButton:hover {
+    background-color: #FF3333; /* Hover sırasında koyu kırmızı */
+    box-shadow: 0px 8px 20px rgba(255, 76, 76, 0.6); /* Daha belirgin gölge */
+    transform: translateY(-2px); /* Hafif yukarı hareket */
+}
+
+QPushButton:pressed {
+    background-color: #CC0000; /* Tıklandığında daha koyu kırmızı */
+    box-shadow: 0px 4px 10px rgba(255, 76, 76, 0.4); /* Daha küçük gölge */
+    transform: scale(0.95);   /* Hafif küçültme efekti */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Youtube Downloader</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="twitterDownloader">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>250</y>
+      <width>301</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: #42ddf5; /* Mevcut mavi buton rengi */
+    color: white;             /* Yazı rengi */
+    font-size: 16px;          /* Yazı boyutu */
+    font-weight: bold;        /* Kalın yazı */
+    border: none;             /* Kenar çizgisi kaldırıldı */
+    border-radius: 25px;      /* Tam yuvarlak köşeler */
+    padding: 12px 24px;       /* İç boşluk */
+    transition: all 0.3s ease; /* Geçiş efekti */
+    text-transform: uppercase; /* Yazıyı büyük harf yapar */
+    letter-spacing: 1px;      /* Yazı aralığı */
+    box-shadow: 0px 5px 15px rgba(66, 221, 245, 0.4); /* Hafif gölge efekti */
+}
+
+QPushButton:hover {
+    background-color: #42c5f5; /* Hover sırasında daha koyu mavi */
+    box-shadow: 0px 8px 20px rgba(66, 221, 245, 0.6); /* Daha belirgin gölge */
+    transform: translateY(-2px); /* Hafif yukarı hareket */
+}
+
+QPushButton:pressed {
+    background-color: #42c5f5; /* Tıklandığında daha koyu mavi */
+    box-shadow: 0px 4px 10px rgba(66, 221, 245, 0.4); /* Daha küçük gölge */
+    transform: scale(0.95);   /* Hafif küçültme efekti */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Twitter Downloader</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="instagramDownloader">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>350</y>
+      <width>301</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background: qlineargradient(
+        spread: pad,
+        x1: 0,
+        y1: 0,
+        x2: 1,
+        y2: 1,
+        stop: 0 #FF512F, /* Turuncu */
+        stop: 1 #DD2476 /* Mor */
+    ); /* Gradient arka plan */
+    color: white;             /* Yazı rengi */
+    font-size: 16px;          /* Yazı boyutu */
+    font-weight: bold;        /* Kalın yazı */
+    border: none;             /* Çerçeve yok */
+    border-radius: 25px;      /* Tam yuvarlak köşeler */
+    padding: 12px 24px;       /* İç boşluk */
+    transition: all 0.3s ease; /* Geçiş efekti */
+    text-transform: uppercase; /* Yazıyı büyük harf yapar */
+    letter-spacing: 1px;      /* Yazı aralığı */
+}
+
+QPushButton:hover {
+    filter: brightness(1.1); /* Hover sırasında parlaklık efekti */
+}
+
+QPushButton:pressed {
+    filter: brightness(0.9); /* Tıklama sırasında koyulaşma efekti */
+    transform: scale(0.95);  /* Hafif küçültme efekti */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Instagram Downloader</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="headerLabel">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>50</y>
+      <width>511</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Script</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+    font-size: 24px;          /* Büyük yazı boyutu */
+    font-weight: bold;        /* Kalın yazı */
+    color: #333333;           /* Koyu gri renk */
+    text-align: center;       /* Ortalanmış yazı */
+    margin: 20px 0;           /* Üst ve alt boşluk */
+    letter-spacing: 1px;      /* Hafif harf aralığı */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>DownloadMate Content Downloader</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

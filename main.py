@@ -1,40 +1,41 @@
-from youtubeDownloader import YouTubeDownloader
+import sys
+from PyQt5 import QtWidgets
+from mainFiles.mainForm import Ui_DownloadMate
+from youtubeFiles.youtubeDownloadForm import Ui_MainWindow
 
-def main():
-    # YouTubeDownloader sınıfını başlat
-    downloader = YouTubeDownloader()
 
-    # Kullanıcıdan URL, format ve kalite bilgilerini al
-    video_url = input("YouTube video URL'sini girin: ")
-    
-    print("\nMevcut formatlar listeleniyor...")
-    available_formats = downloader.get_available_formats(video_url)
-    for format_id, details in available_formats.items():
-        print(f"{format_id}: {details}")
+class MainForm(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_DownloadMate()
+        self.ui.setupUi(self)
 
-    format_choice = input("\nFormat seçin (mp4/mp3): ").strip().lower()
+        # YouTube Downloader butonuna tıklama olayını tanımlıyoruz.
+        self.ui.youtubeDownloader.clicked.connect(self.openYoutubeDownloadForm)
 
-    if format_choice == "mp4":
-        quality_choice = input("\nKalite seçin (ör: 134 - 360p, 135 - 480p, 136 - 720p): ").strip()
+    def openYoutubeDownloadForm(self):
+        # YouTube Download Form'u aç ve MainForm'u kapat
+        self.youtubeDownloadForm = YoutubeDownloadForm(self)
+        self.youtubeDownloadForm.show()
+        self.hide()  # MainForm'u kapatmak yerine gizliyoruz
 
-    # Videonun başlığını alın ve dosya adını oluşturun
-    video_title = downloader.sanitize_and_get_title(video_url)
 
-    if format_choice == "mp3":
-        # Sadece ses indir
-        downloader.download_audio_only(video_url, video_title)
-    elif format_choice == "mp4":
-        # Video ve ses indir
-        try:
-            video_file, audio_file, final_video_file = downloader.download_video_and_audio(
-                video_url, quality_choice, video_title
-            )
-            # İndirilen dosyaları birleştir
-            downloader.merge_video_and_audio(video_file, audio_file, final_video_file)
-        except Exception as e:
-            print(f"Hata oluştu: {e}")
-    else:
-        print("Geçersiz format seçimi!")
+class YoutubeDownloadForm(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super().__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.parent = parent  # MainForm'u referans olarak alıyoruz
+
+    def closeEvent(self, event):
+        # YoutubeDownloadForm kapanırken MainForm'u tekrar gösteriyoruz
+        if self.parent:
+            self.parent.show()
+        event.accept()  # Kapatma olayını kabul ediyoruz
+
 
 if __name__ == "__main__":
-    main()
+    app = QtWidgets.QApplication(sys.argv)
+    mainForm = MainForm()
+    mainForm.show()
+    sys.exit(app.exec_())
