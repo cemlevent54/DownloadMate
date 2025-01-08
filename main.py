@@ -37,7 +37,6 @@ class MainForm(QtWidgets.QMainWindow):
         self.twitterDownloadForm.show()
         self.hide()
 
-
 class YoutubeDownloadForm(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super().__init__()
@@ -77,9 +76,6 @@ class TwitterDownloadForm(QtWidgets.QMainWindow):
             self.parent.show()
         event.accept()  # Kapatma olayını kabul ediyoruz
         
-
-
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

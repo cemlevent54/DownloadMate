@@ -35,7 +35,7 @@ class Ui_DownloadMate(object):
 "")
         self.centralwidget.setObjectName("centralwidget")
         self.youtubeDownloader = QtWidgets.QPushButton(self.centralwidget)
-        self.youtubeDownloader.setGeometry(QtCore.QRect(230, 150, 301, 61))
+        self.youtubeDownloader.setGeometry(QtCore.QRect(230, 150, 350, 61))
         font = QtGui.QFont()
         font.setFamily("Segoe Script")
         font.setPointSize(-1)
@@ -70,7 +70,7 @@ class Ui_DownloadMate(object):
 "")
         self.youtubeDownloader.setObjectName("youtubeDownloader")
         self.twitterDownloader = QtWidgets.QPushButton(self.centralwidget)
-        self.twitterDownloader.setGeometry(QtCore.QRect(230, 250, 301, 61))
+        self.twitterDownloader.setGeometry(QtCore.QRect(230, 250, 350, 61))
         font = QtGui.QFont()
         font.setFamily("Segoe Script")
         font.setPointSize(-1)
@@ -105,7 +105,7 @@ class Ui_DownloadMate(object):
 "")
         self.twitterDownloader.setObjectName("twitterDownloader")
         self.instagramDownloader = QtWidgets.QPushButton(self.centralwidget)
-        self.instagramDownloader.setGeometry(QtCore.QRect(230, 350, 301, 61))
+        self.instagramDownloader.setGeometry(QtCore.QRect(230, 350, 350, 61))
         font = QtGui.QFont()
         font.setFamily("Segoe Script")
         font.setPointSize(-1)
@@ -177,9 +177,9 @@ class Ui_DownloadMate(object):
         _translate = QtCore.QCoreApplication.translate
         DownloadMate.setWindowTitle(_translate("DownloadMate", "DownloadMate"))
         self.youtubeDownloader.setText(_translate("DownloadMate", "Youtube Downloader"))
-        self.twitterDownloader.setText(_translate("DownloadMate", "Twitter Downloader"))
+        self.twitterDownloader.setText(_translate("DownloadMate", "Twitter(X) Downloader"))
         self.instagramDownloader.setText(_translate("DownloadMate", "Instagram Downloader"))
-        self.headerLabel.setText(_translate("DownloadMate", "DownloadMate Content Downloader"))
+        self.headerLabel.setText(_translate("DownloadMate", "DownloadMate Video Downloader"))
 
 
 if __name__ == "__main__":

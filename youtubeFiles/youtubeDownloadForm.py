@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from youtubeFiles.youtubeDownloader import YouTubeDownloader
 import os
 import platform
+import re
 
 # youtube download form
 class Ui_MainWindow(object):
@@ -248,6 +249,14 @@ class Ui_MainWindow(object):
         if not video_url:
             QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen bir URL girin!")
             return
+        
+        # URL'nin geçerli bir YouTube bağlantısı olup olmadığını kontrol et
+        youtube_url_pattern = re.compile(
+            r"^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})$"
+        )
+        if not youtube_url_pattern.match(video_url):
+            QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen geçerli bir YouTube bağlantısı girin!")
+            return
 
         format_choice = self.get_selected_format()
         quality_choice = self.get_selected_quality()
@@ -289,16 +298,25 @@ class Ui_MainWindow(object):
         """
         # Metin kutusunu temizle
         self.linkTxtBox.clear()
-
-        # Format Radio Button'larını sıfırla
+       
+        # Format radio button'larını sıfırla
+        self.mp3Radio.setAutoExclusive(False)
+        self.mp4Radio.setAutoExclusive(False)
         self.mp3Radio.setChecked(False)
         self.mp4Radio.setChecked(False)
+        self.mp3Radio.setAutoExclusive(True)
+        self.mp4Radio.setAutoExclusive(True)
 
-        # Quality Radio Button'larını sıfırla
+        # Quality radio button'larını sıfırla
+        self.radio360p.setAutoExclusive(False)
+        self.radio480p.setAutoExclusive(False)
+        self.radio720p.setAutoExclusive(False)
+        self.radio1080p.setAutoExclusive(False)
         self.radio360p.setChecked(False)
         self.radio480p.setChecked(False)
         self.radio720p.setChecked(False)
         self.radio1080p.setChecked(False)
+        self.radio360p.setAutoExclusive(True)
 
     def open_downloads_folder(self):
         """

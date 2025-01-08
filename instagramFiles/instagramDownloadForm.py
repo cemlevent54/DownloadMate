@@ -236,13 +236,18 @@ class Ui_InstagramLoader(object):
         if not url:
             QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen bir link girin.")
             return
+        
+        # URL'nin geçerli bir Instagram bağlantısı olup olmadığını kontrol et
+        instagram_url_pattern = re.compile(
+            r"^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)\/p\/[a-zA-Z0-9_-]+\/?$"
+        )
+        if not instagram_url_pattern.match(url):
+            QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen geçerli bir Instagram bağlantısı girin!")
+            return
 
         # İndirme işlemi
         try:
-           
-           
            self.instagram_downloader.download(url)
-           
            QtWidgets.QMessageBox.information(None, "Başarılı", f"Dosya indirildi.")
            self.linkTxtBox.clear()
         
