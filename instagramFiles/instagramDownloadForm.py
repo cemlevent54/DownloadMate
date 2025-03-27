@@ -10,7 +10,8 @@
 import datetime
 import re
 from PyQt5 import QtCore, QtGui, QtWidgets
-from instagramFiles.instagramDownloader import InstagramDownloader
+from instagramFiles.downloader import InstagramDownloader
+from instagramFiles.form_controller import InstagramFormController
 import os
 
 class Ui_InstagramLoader(object):
@@ -199,9 +200,10 @@ class Ui_InstagramLoader(object):
         self.retranslateUi(InstagramLoader)
         QtCore.QMetaObject.connectSlotsByName(InstagramLoader)
         
-        self.instagram_downloader = InstagramDownloader()
-        self.searchButton.clicked.connect(self.download_video)
-        self.downloadsButton.clicked.connect(self.open_downloads_folder)
+        # self.instagram_downloader = InstagramDownloader()
+        self.controller = InstagramFormController(self)
+        # self.searchButton.clicked.connect(self.download_video)
+        # self.downloadsButton.clicked.connect(self.open_downloads_folder)
         
     def retranslateUi(self, InstagramLoader):
         _translate = QtCore.QCoreApplication.translate
@@ -236,8 +238,7 @@ class Ui_InstagramLoader(object):
         if not url:
             QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen bir link girin.")
             return
-        
-        # URL'nin geçerli bir Instagram bağlantısı olup olmadığını kontrol et
+
         instagram_url_pattern = re.compile(
             r"^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)\/p\/[a-zA-Z0-9_-]+\/?$"
         )
@@ -245,15 +246,23 @@ class Ui_InstagramLoader(object):
             QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen geçerli bir Instagram bağlantısı girin!")
             return
 
-        # İndirme işlemi
         try:
-           self.instagram_downloader.download(url)
-           QtWidgets.QMessageBox.information(None, "Başarılı", f"Dosya indirildi.")
-           self.linkTxtBox.clear()
-        
+            timestamp = datetime.datetime.now().strftime("%d_%m_%Y_%H_%M")
+            title = self.instagram_downloader.sanitize_and_get_title(url)
+            filename = f"{timestamp}_{title}"
+
+            result_path = self.instagram_downloader.download_video(url)
+            
+            if result_path and os.path.exists(result_path):
+                QtWidgets.QMessageBox.information(None, "Başarılı", f"İndirilen dosya:\n{os.path.basename(result_path)}")
+            else:
+                QtWidgets.QMessageBox.warning(None, "Hata", "Video indirilemedi.")
+
+            self.linkTxtBox.clear()
         except Exception as e:
-           QtWidgets.QMessageBox.warning(None, "Hata", f"İndirme sırasında hata oluştu: {e}")
-           self.linkTxtBox.clear()
+            QtWidgets.QMessageBox.critical(None, "Hata", f"İndirme sırasında hata oluştu:\n{e}")
+            self.linkTxtBox.clear()
+
         
 
 # if __name__ == "__main__":
