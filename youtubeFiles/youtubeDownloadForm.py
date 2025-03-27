@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from youtubeFiles.youtubeDownloader import YouTubeDownloader
+from .form_controller import YouTubeFormController
 import os
 import platform
 import re
@@ -183,7 +184,7 @@ class Ui_MainWindow(object):
 "                color: #FFFFFF;\n"
 "            }")
         self.downloadsFolderButton.setObjectName("downloadsFolderButton")
-        self.downloadsFolderButton.clicked.connect(self.open_downloads_folder)
+        # self.downloadsFolderButton.clicked.connect(self.open_downloads_folder)
         
         # Result label
         self.resultLabel = QtWidgets.QLabel(self.centralwidget)
@@ -205,8 +206,10 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
         # connect the search button to the search function
+        self.youtube_controller = YouTubeFormController(self)
         self.youtube_downloader = YouTubeDownloader()
-        self.searchButton.clicked.connect(self.download_video)
+        # self.searchButton.clicked.connect(self.download_video)
+        
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -223,109 +226,4 @@ class Ui_MainWindow(object):
         self.radio1080p.setText(_translate("MainWindow", "1080p"))
         self.downloadsFolderButton.setText(_translate("MainWindow", "Downloads"))
     
-    def get_selected_format(self):
-        """
-        Get the selected format from the radio buttons
-        """
-        return "mp3" if self.mp3Radio.isChecked() else "mp4"
-        
-    def get_selected_quality(self):
-        """Seçilen kaliteyi döndürür."""
-        if self.radio360p.isChecked():
-            return "134"  
-        elif self.radio480p.isChecked():
-            return "135"  
-        elif self.radio720p.isChecked():
-            return "136"  
-        elif self.radio1080p.isChecked():
-            return "137"  
-        return None   
     
-    def download_video(self):
-        """
-        Download the video based on the user's choices
-        """
-        video_url = self.linkTxtBox.text().strip()
-        if not video_url:
-            QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen bir URL girin!")
-            return
-        
-        # URL'nin geçerli bir YouTube bağlantısı olup olmadığını kontrol et
-        youtube_url_pattern = re.compile(
-            r"^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})$"
-        )
-        if not youtube_url_pattern.match(video_url):
-            QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen geçerli bir YouTube bağlantısı girin!")
-            return
-
-        format_choice = self.get_selected_format()
-        quality_choice = self.get_selected_quality()
-
-        try:
-            video_title = self.youtube_downloader.sanitize_and_get_title(video_url)
-            quality_choice_str = None
-            if quality_choice == "134":
-                quality_choice_str = "360p"
-            elif quality_choice == "135":
-                quality_choice_str = "480p"
-            elif quality_choice == "136":
-                quality_choice_str = "720p"
-            elif quality_choice == "137":
-                quality_choice_str = "1080p"
-            else:
-                quality_choice_str = None
-            formatted_file_name = f"{video_title}_{format_choice}_{quality_choice_str or 'default'}"
-
-            if format_choice == "mp3":
-                self.youtube_downloader.download_audio_only(video_url, formatted_file_name)
-                QtWidgets.QMessageBox.information(None, "Başarılı", "Ses başarıyla indirildi!")
-            elif format_choice == "mp4" and quality_choice:
-                video_file, audio_file, final_video_file = self.youtube_downloader.download_video_and_audio(
-                    video_url, quality_choice, formatted_file_name
-                )
-                self.youtube_downloader.merge_video_and_audio(video_file, audio_file, final_video_file)
-                QtWidgets.QMessageBox.information(None, "Başarılı", "Video başarıyla indirildi!")
-                # delete information from the groupboxes and textboxes
-                self.reset_form()
-            else:
-                QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen geçerli bir kalite seçin!")
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(None, "Hata", f"Bir hata oluştu: {e}")
-        
-    def reset_form(self):
-        """
-                Formu sıfırlar: Metin kutusunu ve radio button'ları temizler
-        """
-        # Metin kutusunu temizle
-        self.linkTxtBox.clear()
-       
-        # Format radio button'larını sıfırla
-        self.mp3Radio.setAutoExclusive(False)
-        self.mp4Radio.setAutoExclusive(False)
-        self.mp3Radio.setChecked(False)
-        self.mp4Radio.setChecked(False)
-        self.mp3Radio.setAutoExclusive(True)
-        self.mp4Radio.setAutoExclusive(True)
-
-        # Quality radio button'larını sıfırla
-        self.radio360p.setAutoExclusive(False)
-        self.radio480p.setAutoExclusive(False)
-        self.radio720p.setAutoExclusive(False)
-        self.radio1080p.setAutoExclusive(False)
-        self.radio360p.setChecked(False)
-        self.radio480p.setChecked(False)
-        self.radio720p.setChecked(False)
-        self.radio1080p.setChecked(False)
-        self.radio360p.setAutoExclusive(True)
-
-    def open_downloads_folder(self):
-        """
-        Open the downloads folder
-        """
-        downloads_folder = self.youtube_downloader.downloads_folder
-        if not os.path.exists(downloads_folder):
-           os.makedirs(downloads_folder)
-        
-        os.startfile(downloads_folder)
-
-
