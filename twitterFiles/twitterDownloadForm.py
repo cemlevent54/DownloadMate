@@ -9,9 +9,10 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from twitterFiles.twitterDownloader import TwitDownloader
+from twitterFiles.downloader import TwitterDownloader
 import os
 import re
+from twitterFiles.form_controller import TwitterFormController
 
 
 class Ui_TwitterDownloader(object):
@@ -209,9 +210,11 @@ class Ui_TwitterDownloader(object):
         self.retranslateUi(TwitterDownloader)
         QtCore.QMetaObject.connectSlotsByName(TwitterDownloader)
         
-        self.twitter_downloader = TwitDownloader()
-        self.searchButton.clicked.connect(self.download_video)
-        self.downloadsButton.clicked.connect(self.open_downloads_folder)
+        # self.twitter_downloader = TwitDownloader()
+        # self.searchButton.clicked.connect(self.download_video)
+        # self.downloadsButton.clicked.connect(self.open_downloads_folder)
+        self.controller = TwitterFormController(self)
+
 
     def retranslateUi(self, TwitterDownloader):
         _translate = QtCore.QCoreApplication.translate
@@ -242,74 +245,10 @@ class Ui_TwitterDownloader(object):
             return "1080"
         return "best"
     
-    def download_video(self):
-        video_url = self.linkTxtBox.text().strip()
-        if not video_url:
-            QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen bir URL girin!")
-            return
-        
-        twitter_url_pattern = re.compile(
-            r"^(https?:\/\/)?(www\.)?(twitter\.com|x\.com)\/([a-zA-Z0-9_]+)\/status\/([0-9]+)$"
-        )
-        if not twitter_url_pattern.match(video_url):
-            QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen geçerli bir Twitter bağlantısı girin!")
-            return
-        
-        format_choice = self.get_selected_format()
-        quality_choice = self.get_selected_quality()
-        
-        try:
-           if format_choice == "mp3":
-               self.twitter_downloader.download_audio_only(video_url)
-               QtWidgets.QMessageBox.information(None, "Başarılı", "Ses başarıyla indirildi!")
-           elif format_choice == "mp4" and quality_choice:
-               self.twitter_downloader.download_video(video_url, quality_choice)
-               QtWidgets.QMessageBox.information(None, "Başarılı", "Video başarıyla indirildi!")
-           
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(None, "Hata", f"İndirme sırasında hata oluştu: {e}")
-            
-        self.reset_form()
-        self.mp4Radio.setChecked(False)
-            
-    def reset_form(self):
-        """
-        Formdaki tüm alanları sıfırlar.
-        """
-        # TextBox'u temizle
-        self.linkTxtBox.clear()
-
-        # Format radio button'larını sıfırla
-        self.mp3Radio.setAutoExclusive(False)
-        self.mp4Radio.setAutoExclusive(False)
-        self.mp3Radio.setChecked(False)
-        self.mp4Radio.setChecked(False)
-        self.mp3Radio.setAutoExclusive(True)
-        self.mp4Radio.setAutoExclusive(True)
-
-        # Quality radio button'larını sıfırla
-        self.quality360p.setAutoExclusive(False)
-        self.quality480p.setAutoExclusive(False)
-        self.quality720p.setAutoExclusive(False)
-        self.quality1080p.setAutoExclusive(False)
-        self.quality360p.setChecked(False)
-        self.quality480p.setChecked(False)
-        self.quality720p.setChecked(False)
-        self.quality1080p.setChecked(False)
-        self.quality360p.setAutoExclusive(True)
-        self.quality480p.setAutoExclusive(True)
-        self.quality720p.setAutoExclusive(True)
-        self.quality1080p.setAutoExclusive(True)
     
-    def open_downloads_folder(self):
-        """
-        Open the downloads folder
-        """
-        downloads_folder = self.twitter_downloader.downloads_folder
-        if not os.path.exists(downloads_folder):
-           os.makedirs(downloads_folder)
-        
-        os.startfile(downloads_folder)   
+          
+    
+     
      
 # if __name__ == "__main__":
 #     import sys
