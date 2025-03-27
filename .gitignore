@@ -1,3 +1,4 @@
-/setup/
+setup/
 
-/setup/bin/ffmpeg.exe
+setup/FFmpeg/bin/ffmpeg.exe
+setup/FFmpeg/bin/ffmpeg.exe 
