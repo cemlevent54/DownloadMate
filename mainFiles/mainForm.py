@@ -24,13 +24,13 @@ class Ui_DownloadMate(object):
         DownloadMate.setStatusTip("")
         DownloadMate.setLayoutDirection(QtCore.Qt.LeftToRight)
         DownloadMate.setStyleSheet("QWidget {\n"
-"    background-color: #F5F5F5; /* Hafif gri (Örnek) */\n"
+"    background-color: 	#A9A9A9	; /* Hafif gri (Örnek) */\n"
 "}\n"
 "")
         self.centralwidget = QtWidgets.QWidget(DownloadMate)
         self.centralwidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.centralwidget.setStyleSheet("QWidget {\n"
-"    background-color: #D3D3D3; /* Hafif gri (Örnek) */\n"
+"    background-color: 	#A9A9A9	; /* Hafif gri (Örnek) */\n"
 "}\n"
 "")
         self.centralwidget.setObjectName("centralwidget")

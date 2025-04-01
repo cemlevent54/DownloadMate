@@ -5,12 +5,22 @@ import yt_dlp
 
 from .ffmpeg_manager import FFmpegManager
 from .utils import sanitize_filename
+import sys
 
 class YouTubeDownloader:
     def __init__(self):
         self.folder = self.create_download_folder()
         self.ffmpeg = FFmpegManager()
-        self.ffmpeg_folder = os.path.join(os.getcwd(), "setup", "ffmpeg", "bin")  # FFmpeg klasörü
+
+        # ✅ PyInstaller destekli ffmpeg yolu
+        if getattr(sys, 'frozen', False):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+
+        self.ffmpeg_folder = os.path.join(base_path, "setup", "FFmpeg", "bin")
+        print("FFmpeg dizini:", self.ffmpeg_folder)
+
         self.download_folder = self.folder
 
     def create_download_folder(self):
@@ -22,7 +32,7 @@ class YouTubeDownloader:
     def download_audio_only(self, url, file_name):
         ydl_opts = {
             'format': '140',
-            'ffmpeg_location': self.ffmpeg_folder,
+            'ffmpeg_location': os.path.join(self.ffmpeg_folder, 'ffmpeg.exe'),
             'outtmpl': os.path.join(self.folder, f"{file_name}.mp3"),
             'postprocessors': [
                 {'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '192'},
@@ -40,12 +50,12 @@ class YouTubeDownloader:
 
         ydl_video_opts = {
             'format': video_quality,
-            'ffmpeg_location': self.ffmpeg_folder,
+            'ffmpeg_location': os.path.join(self.ffmpeg_folder, 'ffmpeg.exe'),
             'outtmpl': video_file
         }
         ydl_audio_opts = {
             'format': '140',
-            'ffmpeg_location': self.ffmpeg_folder,
+            'ffmpeg_location': os.path.join(self.ffmpeg_folder, 'ffmpeg.exe'),
             'outtmpl': audio_file
         }
 

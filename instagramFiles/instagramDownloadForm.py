@@ -207,7 +207,7 @@ class Ui_InstagramLoader(object):
         
     def retranslateUi(self, InstagramLoader):
         _translate = QtCore.QCoreApplication.translate
-        InstagramLoader.setWindowTitle(_translate("InstagramLoader", "Instagram Loader"))
+        InstagramLoader.setWindowTitle(_translate("InstagramLoader", "📷 Instagram Downloader"))
         self.headerLabel.setText(_translate("InstagramLoader", "Download Instagram Videos"))
         self.formatGroupBox.setTitle(_translate("InstagramLoader", "Format"))
         self.mp4Radio.setText(_translate("InstagramLoader", "mp4"))

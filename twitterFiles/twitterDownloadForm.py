@@ -218,7 +218,7 @@ class Ui_TwitterDownloader(object):
 
     def retranslateUi(self, TwitterDownloader):
         _translate = QtCore.QCoreApplication.translate
-        TwitterDownloader.setWindowTitle(_translate("TwitterDownloader", "Twitter Downloader"))
+        TwitterDownloader.setWindowTitle(_translate("TwitterDownloader", "𝕏 Twitter Downloader"))
         self.qualityGroupbox.setTitle(_translate("TwitterDownloader", "Quality"))
         self.quality480p.setText(_translate("TwitterDownloader", "480p"))
         self.quality360p.setText(_translate("TwitterDownloader", "360p"))
