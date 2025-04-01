@@ -11,6 +11,7 @@ class YouTubeDownloader:
         self.folder = self.create_download_folder()
         self.ffmpeg = FFmpegManager()
         self.ffmpeg_folder = os.path.join(os.getcwd(), "setup", "ffmpeg", "bin")  # FFmpeg klasörü
+        self.download_folder = self.folder
 
     def create_download_folder(self):
         folder = "youtubeDownloads"

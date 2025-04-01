@@ -17,10 +17,12 @@ class InstagramFormController:
         self.ui.downloadsButton.clicked.connect(self.open_downloads_folder)
 
     def download_video(self):
-        url = self.ui.linkTxtBox.text().strip()
-        if not url:
+        raw_url = self.ui.linkTxtBox.text().strip()
+        if not raw_url:
             QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen bir link girin.")
             return
+
+        url = self.normalize_instagram_url(raw_url)  # ✅ Normalleştirme burada
 
         instagram_url_pattern = re.compile(
             r"^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)\/p\/[a-zA-Z0-9_-]+\/?$"
@@ -35,7 +37,6 @@ class InstagramFormController:
             filename = f"{timestamp}_{title}"
             result_path = self.downloader.download_video(url, filename)
 
-            
             if result_path and os.path.exists(result_path):
                 QtWidgets.QMessageBox.information(None, "Başarılı", f"İndirilen dosya:\n{os.path.basename(result_path)}")
             else:
@@ -45,6 +46,15 @@ class InstagramFormController:
         except Exception as e:
             QtWidgets.QMessageBox.critical(None, "Hata", f"İndirme sırasında hata oluştu:\n{e}")
             self.ui.linkTxtBox.clear()
+
+    def normalize_instagram_url(self, url: str) -> str:
+        pattern = re.compile(r"(?:instagram\.com\/(?:p|reel|tv)\/)([a-zA-Z0-9_-]+)")
+        match = pattern.search(url)
+        if match:
+            media_id = match.group(1)
+            return f"https://www.instagram.com/p/{media_id}/"
+        return url
+
 
     def open_downloads_folder(self):
         folder = self.downloader.download_folder

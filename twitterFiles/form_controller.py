@@ -17,14 +17,16 @@ class TwitterFormController:
         self.ui.downloadsButton.clicked.connect(self.open_downloads_folder)
 
     def download_video(self):
-        url = self.ui.linkTxtBox.text().strip()
+        raw_url = self.ui.linkTxtBox.text().strip()
 
-        if not url:
+        if not raw_url:
             QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen bir URL girin!")
             return
 
+        url = self.normalize_twitter_url(raw_url)  # ✅ Normalleştirme burada
+
         twitter_url_pattern = re.compile(
-            r"^(https?:\/\/)?(www\.)?(twitter\.com|x\.com)\/([a-zA-Z0-9_]+)\/status\/([0-9]+)$"
+            r"^(https?:\/\/)?(www\.)?(twitter\.com|x\.com)\/i\/status\/([0-9]+)$"
         )
         if not twitter_url_pattern.match(url):
             QtWidgets.QMessageBox.warning(None, "Hata", "Lütfen geçerli bir Twitter bağlantısı girin!")
@@ -43,6 +45,14 @@ class TwitterFormController:
         except Exception as e:
             QtWidgets.QMessageBox.critical(None, "Hata", f"İndirme sırasında hata oluştu:\n{e}")
         self.reset_form()
+
+    def normalize_twitter_url(self, url: str) -> str:
+        match = re.search(r"(?:twitter\.com|x\.com)/[^/]+/status/(\d+)", url)
+        if match:
+            tweet_id = match.group(1)
+            return f"https://x.com/i/status/{tweet_id}"
+        return url
+
 
     def reset_form(self):
         self.ui.linkTxtBox.clear()

@@ -1,7 +1,6 @@
-# youtubeFiles/form_controller.py
-
 from PyQt5 import QtWidgets
 import os, re
+from urllib.parse import urlparse, parse_qs  # EKLENDİ
 from .downloader import YouTubeDownloader
 
 class YouTubeFormController:
@@ -28,10 +27,22 @@ class YouTubeFormController:
             return "137"
         return None
 
+    # 🔧 EKLENEN TEMİZLEME FONKSİYONU
+    def normalize_youtube_url(self, url: str) -> str:
+        parsed_url = urlparse(url)
+        query = parse_qs(parsed_url.query)
+        video_id = query.get("v")
+        if video_id:
+            return f"https://www.youtube.com/watch?v={video_id[0]}"
+        return url
+
     def download_video(self):
-        url = self.ui.linkTxtBox.text().strip()
-        if not url:
+        raw_url = self.ui.linkTxtBox.text().strip()
+        if not raw_url:
             return self.show_error("Lütfen bir URL girin!")
+
+        # 👇 Burada URL'yi normalize ediyoruz
+        url = self.normalize_youtube_url(raw_url)
 
         if not re.match(r"^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})$", url):
             return self.show_error("Lütfen geçerli bir YouTube bağlantısı girin!")
@@ -51,7 +62,6 @@ class YouTubeFormController:
                 self.show_info("Ses başarıyla indirildi!")
             elif format_choice == "mp4" and quality_choice:
                 v, a, out = self.downloader.download_video_and_audio(url, quality_choice, file_name)
-                # self.downloader.merge_video_and_audio(v, a, out)
                 self.show_info("Video başarıyla indirildi!")
             else:
                 self.show_error("Lütfen geçerli bir kalite seçin!")
@@ -61,7 +71,7 @@ class YouTubeFormController:
             self.show_error(f"Bir hata oluştu: {e}")
 
     def open_downloads_folder(self):
-        folder = self.downloader.downloads_folder
+        folder = self.downloader.download_folder
         if not os.path.exists(folder):
             os.makedirs(folder)
         os.startfile(folder)
