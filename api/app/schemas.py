@@ -8,6 +8,7 @@ class YouTubeDownloadRequest(BaseModel):
 
 class TwitterDownloadRequest(BaseModel):
     url: str
+    type: Literal['video', 'audio']  # 'video' ya da 'audio' dışında bir değer almaz
     
 
 class InstagramDownloadRequest(BaseModel):
