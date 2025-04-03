@@ -3,9 +3,10 @@ FROM python:3.11-slim
 # Gerekli sistem paketlerini kur
 RUN apt-get update && apt-get install -y ffmpeg unzip && apt-get clean
 
+# Çalışma dizini
 WORKDIR /app
 
-# Sadece gerekli dosyaları kopyala
+# api klasörü içeriğini kopyala (Dockerfile api içindeyse zaten burası doğru)
 COPY . .
 
 # Bağımlılıkları yükle
