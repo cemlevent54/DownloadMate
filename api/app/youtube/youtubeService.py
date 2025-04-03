@@ -9,6 +9,7 @@ import subprocess
 from moviepy import AudioFileClip
 import traceback2 as traceback
 from fastapi.logger import logger
+from fastapi import HTTPException
 
 
 class YoutubeDownloadService:
@@ -67,8 +68,18 @@ class YoutubeDownloadService:
             return final_file
 
         except Exception as e:
-            logger.error(f"[🔥] download_video() hatası: {e}\n{traceback.format_exc()}")
-            return None
+            error_message = str(e)
+            print(f"[🔥] download_video() hatası: {error_message}")
+
+            # Ülke kısıtlaması kontrolü
+            if "not made this video available in your country" in error_message:
+                raise HTTPException(
+                    status_code=403,
+                    detail="Bu video bulunduğunuz ülke için kullanılamıyor."
+                )
+
+            raise
+
     
     def sanitize_filename(self, filename):
         return re.sub(r'[\\/*?:"<>|]', '', filename)
