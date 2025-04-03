@@ -46,6 +46,7 @@ class YoutubeDownloadService:
 
         ydl_video_opts = {
             'format': f'{quality}+bestaudio/best',
+            'geo_bypass': True,
             'ffmpeg_location': self.ffmpeg_folder,
             'outtmpl': output_file + '.%(ext)s',
             'postprocessors': [{
@@ -143,6 +144,7 @@ class YoutubeDownloadService:
 
         ydl_opts = {
             'format': 'bestaudio/best',
+            'geo_bypass': True,
             'outtmpl': webm_path,
             'postprocessors': []
         }
