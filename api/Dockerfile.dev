@@ -1,0 +1,17 @@
+FROM python:3.11-slim
+
+# ffmpeg ve unzip'i yükle
+RUN apt-get update && apt-get install -y ffmpeg unzip && apt-get clean
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install -r requirements.txt
+
+# ✅ FFmpeg'i doğru Linux ismiyle kopyala
+RUN mkdir -p /app/app/setup/FFmpeg/bin \
+    && cp $(which ffmpeg) /app/app/setup/FFmpeg/bin/ffmpeg \
+    && chmod +x /app/app/setup/FFmpeg/bin/ffmpeg
+
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]

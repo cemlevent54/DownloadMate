@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 import yt_dlp
 import re
-
+from moviepy import AudioFileClip
 
 class TwitterDownloadService:
     def __init__(self):
@@ -23,40 +23,32 @@ class TwitterDownloadService:
                 file_name = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_UTC")
             file_name = self.sanitize_filename(file_name)
 
-            ffmpeg_dir = os.path.join(os.getcwd(), "app", "setup", "FFmpeg", "bin")
-            ffmpeg_exe = os.path.join(ffmpeg_dir, "ffmpeg.exe")
-            if not os.path.exists(ffmpeg_exe):
-                print(f"[!] FFmpeg bulunamadı: {ffmpeg_exe}")
-                return None
+            webm_path = os.path.join(self.download_folder, f"{file_name}.webm")
+            mp3_path = os.path.join(self.download_folder, f"{file_name}.mp3")
 
-            # .mp3 uzantısını koyma — yt_dlp zaten ekleyecek
-            outtmpl_path = os.path.join(self.download_folder, file_name)
-
+            # yt_dlp ile sadece sesi .webm formatında indir
             ydl_opts = {
                 'format': 'bestaudio/best',
-                'ffmpeg_location': ffmpeg_dir,
-                'outtmpl': outtmpl_path,
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': 'mp3',
-                    'preferredquality': '192',
-                }],
+                'outtmpl': webm_path,
+                'postprocessors': []  # Ses dönüştürmesini biz yapacağız
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
-            # En son oluşan .mp3 dosyasını bul ve döndür
-            mp3_files = [f for f in os.listdir(self.download_folder) if f.endswith(".mp3")]
-            if not mp3_files:
-                print("[!] mp3 dosyası bulunamadı.")
+            if not os.path.exists(webm_path):
+                print("[❌] WebM dosyası indirilemedi.")
                 return None
 
-            latest_mp3 = max(mp3_files, key=lambda f: os.path.getctime(os.path.join(self.download_folder, f)))
-            latest_mp3_path = os.path.join(self.download_folder, latest_mp3)
+            # moviepy ile .mp3'e dönüştür
+            audioclip = AudioFileClip(webm_path)
+            audioclip.write_audiofile(mp3_path)
+            audioclip.close()
 
-            print(f"[✔] Ses indirildi: {latest_mp3}")
-            return latest_mp3_path
+            # Temizlik
+            os.remove(webm_path)
+            print(f"[✔] Ses indirildi ve dönüştürüldü: {mp3_path}")
+            return mp3_path
 
         except Exception as e:
             print(f"[download_audio_only] Hata: {e}")

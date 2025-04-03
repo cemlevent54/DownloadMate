@@ -4,127 +4,173 @@ import sys
 from datetime import datetime
 from .utils import sanitize_filename
 from .ffmpeg_manager import FFmpegManager
+import re
+import subprocess
+from moviepy import AudioFileClip
 
 
 class YoutubeDownloadService:
     def __init__(self):
         self.ffmpeg = FFmpegManager()
-
-        # ✅ PyInstaller destekli ffmpeg yolu
+        
+        # PyInstaller kontrolü
         if getattr(sys, 'frozen', False):
-            base_path = sys._MEIPASS  # PyInstaller kullanıldığında, geçici dosya yolu
+            base_path = sys._MEIPASS
         else:
-            base_path = os.path.abspath(".")  # Normal çalışma sırasında geçerli dizin
+            base_path = os.path.abspath(".")
+
         print("Base dizini:", base_path)
 
-        # FFmpeg dosya yolunun doğru ayarlandığından emin olun
         self.ffmpeg_folder = os.path.join(base_path, "app", "setup", "FFmpeg", "bin")
+        self.ffmpeg_exe = os.path.join(self.ffmpeg_folder, "ffmpeg.exe")
+
         print("FFmpeg dizini:", self.ffmpeg_folder)
 
-        # İndirme klasörünü oluştur
         self.folder = self.create_download_folder()
+        self.download_folder = "youtubeDownloads"
 
     def generate_filename(self):
-        """ Dosya adını tarih ve saatle oluşturur. """
         current_time = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
-        file_name = f"{current_time}"
-        return os.path.join(self.folder, file_name)
+        return os.path.join(self.folder, current_time)
 
     def download(self, url, file_name, only_audio=False):
-        """ URL'den video veya ses indirir. """
-        file_name = sanitize_filename(file_name)  # Dosya adını temizle
-
-        if only_audio:
-            return self.download_audio(url, file_name)
-        else:
-            return self.download_video(url, file_name)
+        file_name = sanitize_filename(file_name)
+        return self.download_audio(url, file_name) if only_audio else self.download_video(url, file_name)
 
     def download_video(self, url, file_name):
-        """ Video ve ses dosyasını indirir ve birleştirir. """
-        # Dosya adı oluşturuluyor
-        output_file = self.generate_filename()  # Dosya adı oluşturuluyor, uzantı eklenmemiş
+        output_file = self.generate_filename()
+        quality = "best"
 
-        # Video ve ses için en iyi formatı seçiyoruz
         ydl_video_opts = {
-            'format': 'bestvideo[height<=720]+bestaudio/best',  # Hem video hem de ses için en iyisini seç
-            'ffmpeg_location': os.path.join(self.ffmpeg_folder, 'ffmpeg.exe'),
-            'outtmpl': output_file,  # Video dosyasının geçici yolu
-            'postprocessors': [{'key': 'FFmpegVideoConvertor', 'preferedformat': 'mp4'}],  # Video formatını mp4'e dönüştür
+            'format': f'{quality}+bestaudio/best',
+            'ffmpeg_location': self.ffmpeg_folder,
+            'outtmpl': output_file + '.%(ext)s',
+            'postprocessors': [{
+                'key': 'FFmpegVideoConvertor',
+                'preferedformat': 'mp4',
+            }]
         }
 
         try:
-            # Video ve ses birlikte indiriliyor
             print(f"Video ve ses indiriliyor: {file_name}")
             with yt_dlp.YoutubeDL(ydl_video_opts) as ydl:
                 ydl.download([url])
 
-            # Dönüştürme sonrası dosyanın yolunu kontrol et
-            if output_file.endswith('.mp4.mp4'):
-                output_file = output_file.replace('.mp4.mp4', '.mp4')  # Fazla olan .mp4'ü sil
+            # Gerçek dosya yolunu bul
+            final_file = output_file + '.mp4'
+            if not os.path.exists(final_file):
+                raise FileNotFoundError(f"Dosya bulunamadı: {final_file}")
 
-            # Dosya uzantısını ekleyelim (eğer yoksa)
-            if not output_file.endswith('.mp4'):
-                output_file += '.mp4'
-
-            # Dosyanın gerçekten mevcut olduğundan emin olun
-            if not os.path.exists(output_file):
-                raise FileNotFoundError(f"Dosya bulunamadı: {output_file}")
-
-            print(f"Video başarıyla indirildi: {output_file}")
-            return output_file
+            print(f"Video başarıyla indirildi: {final_file}")
+            return final_file
 
         except Exception as e:
             print(f"Bir hata oluştu: {e}")
             return None
+    
+    def sanitize_filename(self, filename):
+        return re.sub(r'[\\/*?:"<>|]', '', filename)
 
-
-
+    
 
     def download_audio(self, url, file_name):
-        """ En iyi kalite sesi indirir ve MP3 olarak kaydeder. """
-        # Dosya adı oluşturuluyor
-        output_file = self.generate_filename()  # Dosya adı oluşturuluyor, uzantı eklenmemiş
+        try:
+            if not file_name:
+                file_name = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_UTC")
+            file_name = self.sanitize_filename(file_name)
 
-        # YDL (youtube-dl) için ses indirme seçenekleri
+            print(f"[▶️] download_audio() başlatıldı: {file_name}")
+
+            webm_path = self.download_webm_file(url, file_name)
+            if not webm_path:
+                print("[❌] WebM indirme başarısız.")
+                return None
+
+            mp3_path = os.path.join(self.download_folder, file_name + ".mp3")
+
+            success = self.convert_webm_to_mp3(webm_path, mp3_path)
+            if not success:
+                print("[❌] WebM -> MP3 dönüştürme başarısız.")
+                return None
+
+            print(f"[✅] Ses başarıyla indirildi ve dönüştürüldü: {mp3_path}")
+            return mp3_path
+
+        except Exception as e:
+            print(f"[🔥] download_audio() genel hata: {e}")
+            return None
+
+
+    def convert_webm_to_mp3(self, webm_path, mp3_path):
+        try:
+            print(f"[🎬] MoviePy ile dönüştürme başlatıldı.")
+            print(f"[🛠] Kaynak dosya (webm): {webm_path}")
+            print(f"[🛠] Hedef dosya (mp3): {mp3_path}")
+
+            audioclip = AudioFileClip(webm_path)
+            audioclip.write_audiofile(mp3_path)
+            audioclip.close()
+
+            if os.path.exists(mp3_path):
+                print(f"[🎉] MP3 dosyası oluşturuldu: {mp3_path}")
+                os.remove(webm_path)
+                return True
+            else:
+                print(f"[❌] MP3 dosyası oluşmadı: {mp3_path}")
+                return False
+
+        except Exception as e:
+            print(f"[🔥] convert_webm_to_mp3() hata: {e}")
+            return False
+
+
+    def download_webm_file(self, url, file_name):
+        webm_path = os.path.join(self.download_folder, file_name + ".webm")
+        print(f"[⬇] WebM indirme yolu: {webm_path}")
+
         ydl_opts = {
-            'format': 'bestaudio/best',  # En iyi ses formatını seç
-            'ffmpeg_location': os.path.join(self.ffmpeg_folder, 'ffmpeg.exe'),
-            'outtmpl': output_file,  # Geçici dosya yolunu ayarla
-            'postprocessors': [
-                {'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '192'},  # MP3 formatına dönüştür
-            ],
+            'format': 'bestaudio/best',
+            'outtmpl': webm_path,
+            'postprocessors': []
         }
 
         try:
-            print(f"Ses indiriliyor: {file_name}")
+            print(f"[🔍] WebM indiriliyor: {url}")
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
-            # MP3 dosyasının uzantısını ekle
-            if not output_file.endswith('.mp3'):
-                output_file += '.mp3'
-
-            # Dosyanın gerçekten mevcut olduğundan emin olun
-            if not os.path.exists(output_file):
-                raise FileNotFoundError(f"Dosya bulunamadı: {output_file}")
-
-            print(f"Ses başarıyla indirildi: {output_file}")
-            return output_file
+            if os.path.exists(webm_path):
+                print(f"[📁] WebM dosyası indirildi: {webm_path}")
+                return webm_path
+            else:
+                print(f"[❌] WebM dosyası bulunamadı: {webm_path}")
+                return None
 
         except Exception as e:
-            print(f"Bir hata oluştu: {e}")
+            print(f"[🔥] download_webm_file() hatası: {e}")
             return None
+
+        
+
+
+    
+
+
+
+
+
+
+
+
+
 
 
     def create_download_folder(self):
-        """ İndirme klasörünü oluşturur. """
         folder = "youtubeDownloads"
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+        os.makedirs(folder, exist_ok=True)
         return folder
 
     def cleanup_files(self, files):
-        """ Geçici dosyaları siler. """
         for file in files:
             if os.path.exists(file):
                 os.remove(file)
