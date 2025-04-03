@@ -9,6 +9,7 @@ from app.instagram.downloader import InstagramDownloadAPI
 from app.twitter.downloader import TwitterDownloadAPI
 from fastapi.responses import FileResponse
 import os
+from fastapi.logger import logger
 
 
 app = FastAPI()
@@ -30,20 +31,28 @@ async def sample():
 @app.post("/youtube/download")
 async def youtube_download(request: YouTubeDownloadRequest):
     try:
-        # İndirme işlemi başlatılır
+        logger.info(f"[▶️] İndirme isteği alındı: URL={request.url}, TYPE={request.type}")
+
         result = downloader.download(request.url, request.type)
 
-        # İndirme işlemi başarıyla tamamlandıysa dosyayı kullanıcıya döndür
         if result:
+            logger.info(f"[✅] İndirme başarılı. Dosya: {result}")
             if request.type == "audio":
-                return FileResponse(result, media_type="audio/mp3", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
+                return FileResponse(result, media_type="audio/mp3", headers={
+                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
+                })
             elif request.type == "video":
-                return FileResponse(result, media_type="video/mp4", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
-            
+                return FileResponse(result, media_type="video/mp4", headers={
+                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
+                })
+
+        logger.warning("[⚠️] Dosya döndürülemedi. Result None döndü.")
         raise HTTPException(status_code=500, detail="Video indirilemedi.")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        error_trace = traceback.format_exc()
+        logger.error(f"[🔥] Hata oluştu: {e}\n{error_trace}")
+        raise HTTPException(status_code=500, detail=f"Hata: {str(e)}")
     
 
 # instagram indirme isteği için endpoint

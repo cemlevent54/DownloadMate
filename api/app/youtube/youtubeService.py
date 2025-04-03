@@ -7,6 +7,8 @@ from .ffmpeg_manager import FFmpegManager
 import re
 import subprocess
 from moviepy import AudioFileClip
+import traceback
+from fastapi.logger import logger
 
 
 class YoutubeDownloadService:
@@ -65,7 +67,7 @@ class YoutubeDownloadService:
             return final_file
 
         except Exception as e:
-            print(f"Bir hata oluştu: {e}")
+            logger.error(f"[🔥] download_video() hatası: {e}\n{traceback.format_exc()}")
             return None
     
     def sanitize_filename(self, filename):
