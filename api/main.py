@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.youtube.downloader import YoutubeDownloadAPI
@@ -13,20 +16,8 @@ downloader = YoutubeDownloadAPI()
 instagram_downloader = InstagramDownloadAPI()
 twitter_downloader = TwitterDownloadAPI()
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@app.post("/youtube")
-async def youtube():
-    return {"message": "YouTube API endpoint"}
-
-@app.post("/twitter")
-async def twitter():
-    return {"message": "Twitter API endpoint"}
-
-@app.post("/instagram")
-async def instagram():
-    return {"message": "Instagram API endpoint"}
+def root():
+    return {"message": "API is working ✅"}
 
 @app.post("/sample")
 async def sample():
@@ -92,3 +83,11 @@ async def twitter_download(request: TwitterDownloadRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+
+    port = int(os.environ.get("PORT", 8010))  # Railway dinamik port verir
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
