@@ -5,3 +5,4 @@ pydantic==2.11.1
 yt_dlp==2025.3.31
 uvicorn==0.34.0
 python-dotenv
+traceback2

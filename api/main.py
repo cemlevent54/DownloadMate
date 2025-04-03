@@ -10,6 +10,7 @@ from app.twitter.downloader import TwitterDownloadAPI
 from fastapi.responses import FileResponse
 import os
 from fastapi.logger import logger
+import traceback2 as traceback
 
 
 app = FastAPI()

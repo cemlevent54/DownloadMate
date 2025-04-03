@@ -1,6 +1,7 @@
 from .youtubeService import YoutubeDownloadService
 from datetime import datetime
 from fastapi.logger import logger
+import traceback2 as traceback
 
 class YoutubeDownloadAPI:
     def __init__(self):

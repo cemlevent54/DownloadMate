@@ -7,7 +7,7 @@ from .ffmpeg_manager import FFmpegManager
 import re
 import subprocess
 from moviepy import AudioFileClip
-import traceback
+import traceback2 as traceback
 from fastapi.logger import logger
 
 
