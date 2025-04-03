@@ -6,3 +6,4 @@ yt_dlp==2025.3.31
 uvicorn==0.34.0
 python-dotenv
 traceback2
+six==1.17.0
