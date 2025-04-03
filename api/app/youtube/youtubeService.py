@@ -47,6 +47,7 @@ class YoutubeDownloadService:
         ydl_video_opts = {
             'format': f'{quality}+bestaudio/best',
             'geo_bypass': True,
+            'cookiefile': 'cookies.txt', 
             'ffmpeg_location': self.ffmpeg_folder,
             'outtmpl': output_file + '.%(ext)s',
             'postprocessors': [{
@@ -144,6 +145,7 @@ class YoutubeDownloadService:
 
         ydl_opts = {
             'format': 'bestaudio/best',
+            'cookiefile': 'cookies.txt', 
             'geo_bypass': True,
             'outtmpl': webm_path,
             'postprocessors': []
