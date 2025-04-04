@@ -54,6 +54,8 @@ class InstagramDownloadService:
         media_type = 'video' -> .mp4, 'audio' -> .mp3
         cookies: string olarak alınır (örneğin 'sessionid=abc123; ds_user_id=xyz456')
         """
+        if not file_name:
+            file_name = f"instagram_{media_type}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
         try:
             shortcode = self.extract_shortcode(url)
         except Exception as e:
