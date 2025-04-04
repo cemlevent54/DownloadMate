@@ -114,17 +114,23 @@ class MainActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try {
-                    val cookies = getSharedPreferences("cookies", Context.MODE_PRIVATE)
-                        .getString("cookies", null)
+                    val cookieKey = when (platform) {
+                        "youtube" -> "cookies_youtube"
+                        "instagram" -> "cookies_instagram"
+                        "twitter" -> "cookies_twitter"
+                        else -> null
+                    }
+
+                    val prefs = getSharedPreferences("cookies", Context.MODE_PRIVATE)
+                    val cookies = cookieKey?.let { prefs.getString(it, null) }
 
                     if (cookies.isNullOrEmpty()) {
-                        Toast.makeText(this@MainActivity, "Lütfen önce giriş yaparak çerez alın!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, "Lütfen önce $platform hesabınıza giriş yaparak çerez alın!", Toast.LENGTH_LONG).show()
                         binding.progressBar.visibility = View.GONE
                         return@launch
                     } else {
-                        println("Kullanılacak çerez: $cookies") // ✅ Debug için
+                        println("[$platform] Kullanılacak çerez: $cookies") // ✅ Debug
                     }
-
 
                     val response = when (platform) {
                         "youtube" -> RetrofitClient.apiService.downloadYoutube(request, cookies)
@@ -156,6 +162,7 @@ class MainActivity : AppCompatActivity() {
                     binding.progressBar.visibility = View.GONE
                 }
             }
+
 
         }
 

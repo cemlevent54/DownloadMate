@@ -47,9 +47,10 @@ class YoutubeDownloadService:
         
         cookie_file_path = None
         if cookies:
-            cookie_file_path = os.path.join(self.folder, "cookies.txt")
+            cookie_file_path = os.path.join(self.folder, "youtube_cookies.txt")
+            netscape_cookies = self.convert_cookie_string_to_netscape_format(cookies)
             with open(cookie_file_path, "w", encoding="utf-8") as f:
-                f.write(cookies)
+                f.write(netscape_cookies)
 
         ydl_video_opts = {
             'format': f'{quality}+bestaudio/best',
@@ -64,9 +65,7 @@ class YoutubeDownloadService:
 
         # 🧠 Yeni: Cookie string header olarak veriliyor
         if cookies:
-            ydl_video_opts['http_headers'] = {
-                "Cookie": cookies
-            }
+            ydl_video_opts['cookiefile'] = cookie_file_path
 
         try:
             print(f"Video ve ses indiriliyor: {file_name}")
@@ -110,8 +109,7 @@ class YoutubeDownloadService:
 
             webm_path = self.download_webm_file(url, file_name, cookies=cookies)
             if not webm_path:
-                print("[❌] WebM indirme başarısız.")
-                return None
+                raise Exception("WebM dosyası indirilemedi veya bulunamadı.")
 
             mp3_path = os.path.join(self.download_folder, file_name + ".mp3")
 
@@ -155,6 +153,15 @@ class YoutubeDownloadService:
         webm_path = os.path.join(self.download_folder, file_name + ".webm")
         print(f"[⬇] WebM indirme yolu: {webm_path}")
 
+        cookie_file_path = None
+        if cookies:
+            # 📄 Cookie stringini Netscape formatına çevir
+            cookie_file_path = os.path.join(self.folder, "youtube_cookies.txt")
+            netscape_cookies = self.convert_cookie_string_to_netscape_format(cookies)
+            with open(cookie_file_path, "w", encoding="utf-8") as f:
+                f.write(netscape_cookies)
+            print(f"[🍪] Çerez dosyası yazıldı: {cookie_file_path}")
+
         ydl_opts = {
             'format': 'bestaudio/best',
             'geo_bypass': True,
@@ -162,11 +169,8 @@ class YoutubeDownloadService:
             'postprocessors': []
         }
 
-        # 🧠 Cookie varsa header olarak ekle
-        if cookies:
-            ydl_opts['http_headers'] = {
-                "Cookie": cookies
-            }
+        if cookie_file_path:
+            ydl_opts['cookiefile'] = cookie_file_path
 
         try:
             print(f"[🔍] WebM indiriliyor: {url}")
@@ -184,6 +188,7 @@ class YoutubeDownloadService:
             print(f"[🔥] download_webm_file() hatası: {e}")
             return None
 
+
     def create_download_folder(self):
         folder = "youtubeDownloads"
         os.makedirs(folder, exist_ok=True)
@@ -194,3 +199,16 @@ class YoutubeDownloadService:
             if os.path.exists(file):
                 os.remove(file)
                 print(f"Silindi: {file}")
+    
+    def convert_cookie_string_to_netscape_format(self, cookie_string: str, domain: str = ".youtube.com") -> str:
+        header = "# Netscape HTTP Cookie File\n"
+        lines = []
+        expiry = "1893456000"  # örnek: yıl 2030 civarı
+
+        for item in cookie_string.split(";"):
+            if "=" in item:
+                name, value = item.strip().split("=", 1)
+                line = f"{domain}\tTRUE\t/\tFALSE\t{expiry}\t{name}\t{value}"
+                lines.append(line)
+
+        return header + "\n".join(lines)
