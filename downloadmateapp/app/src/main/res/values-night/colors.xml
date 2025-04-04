@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="colorPrimary">#90CAF9</color>
+    <color name="colorPrimaryVariant">#42A5F5</color>
+    <color name="colorOnPrimary">#000000</color>
+
+    <color name="colorBackground">#121212</color>
+    <color name="colorOnBackground">#FFFFFF</color>
+    <color name="buttonBackground">#FFFFFF</color> <!-- white -->
+    <color name="buttonText">#000000</color> <!-- black -->
+    <color name="editTextUnderline">#FFFFFF</color>
+</resources>
