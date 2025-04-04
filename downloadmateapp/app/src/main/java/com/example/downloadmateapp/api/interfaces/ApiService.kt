@@ -15,7 +15,7 @@ interface ApiService {
     @POST("/youtube/download")
     suspend fun downloadYoutube(
         @Body request: DownloadRequest,
-        @Header("Cookie") cookie: String?
+        @Header("Cookie") cookies: String? = null
     ): Response<ResponseBody>
 
     @POST("/instagram/download")

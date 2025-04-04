@@ -10,6 +10,7 @@ from moviepy import AudioFileClip
 import traceback2 as traceback
 from fastapi.logger import logger
 from fastapi import HTTPException
+from typing import Optional
 
 
 class YoutubeDownloadService:
@@ -36,18 +37,23 @@ class YoutubeDownloadService:
         current_time = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
         return os.path.join(self.folder, current_time)
 
-    def download(self, url, file_name, only_audio=False):
+    def download(self, url, file_name, only_audio=False, cookies: Optional[str] = None):
         file_name = sanitize_filename(file_name)
-        return self.download_audio(url, file_name) if only_audio else self.download_video(url, file_name)
+        return self.download_audio(url, file_name, cookies=cookies) if only_audio else self.download_video(url, file_name, cookies=cookies)
 
-    def download_video(self, url, file_name):
+    def download_video(self, url, file_name, cookies: Optional[str] = None):
         output_file = self.generate_filename()
         quality = "best"
+        
+        cookie_file_path = None
+        if cookies:
+            cookie_file_path = os.path.join(self.folder, "cookies.txt")
+            with open(cookie_file_path, "w", encoding="utf-8") as f:
+                f.write(cookies)
 
         ydl_video_opts = {
             'format': f'{quality}+bestaudio/best',
             'geo_bypass': True,
-            'cookiefile': 'cookies.txt', 
             'ffmpeg_location': self.ffmpeg_folder,
             'outtmpl': output_file + '.%(ext)s',
             'postprocessors': [{
@@ -55,6 +61,9 @@ class YoutubeDownloadService:
                 'preferedformat': 'mp4',
             }]
         }
+
+        if cookie_file_path:
+            ydl_video_opts['cookiefile'] = cookie_file_path
 
         try:
             print(f"Video ve ses indiriliyor: {file_name}")
@@ -88,7 +97,7 @@ class YoutubeDownloadService:
 
     
 
-    def download_audio(self, url, file_name):
+    def download_audio(self, url, file_name, cookies: Optional[str] = None):
         try:
             if not file_name:
                 file_name = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_UTC")
@@ -96,7 +105,7 @@ class YoutubeDownloadService:
 
             print(f"[▶️] download_audio() başlatıldı: {file_name}")
 
-            webm_path = self.download_webm_file(url, file_name)
+            webm_path = self.download_webm_file(url, file_name, cookies=cookies)
             if not webm_path:
                 print("[❌] WebM indirme başarısız.")
                 return None
@@ -139,17 +148,25 @@ class YoutubeDownloadService:
             return False
 
 
-    def download_webm_file(self, url, file_name):
+    def download_webm_file(self, url, file_name, cookies: Optional[str] = None):
         webm_path = os.path.join(self.download_folder, file_name + ".webm")
         print(f"[⬇] WebM indirme yolu: {webm_path}")
 
+        cookie_file_path = None
+        if cookies:
+            cookie_file_path = os.path.join(self.folder, "cookies.txt")
+            with open(cookie_file_path, "w", encoding="utf-8") as f:
+                f.write(cookies)
+
         ydl_opts = {
             'format': 'bestaudio/best',
-            'cookiefile': 'cookies.txt', 
             'geo_bypass': True,
             'outtmpl': webm_path,
             'postprocessors': []
         }
+
+        if cookie_file_path:
+            ydl_opts['cookiefile'] = cookie_file_path
 
         try:
             print(f"[🔍] WebM indiriliyor: {url}")

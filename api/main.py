@@ -31,29 +31,36 @@ async def sample():
 
 # YouTube indirme isteği için endpoint
 @app.post("/youtube/download")
-async def youtube_download(request: YouTubeDownloadRequest):
+async def youtube_download(request: YouTubeDownloadRequest, fastapi_request: Request):
     try:
-        logger.info(f"[▶️] İndirme isteği alındı: URL={request.url}, TYPE={request.type}")
+        logger.info(f"[▶️] YouTube indirme isteği alındı: URL={request.url}, TYPE={request.type}")
 
-        result = downloader.download(request.url, request.type)
+        # 🍪 Mobilden gelen Cookie'yi al
+        cookies = fastapi_request.headers.get("cookie")
+        if cookies:
+            logger.info("[🍪] Cookie bulundu, gönderiliyor...")
+        else:
+            logger.warning("[❌] Cookie header'ı bulunamadı")
+            raise HTTPException(status_code=401, detail="Lütfen önce giriş yaparak çerez alın.")
+
+        # ⏬ Çerezle birlikte indirme başlat
+        result = downloader.download(request.url, request.type, cookies=cookies)
 
         if result:
-            logger.info(f"[✅] İndirme başarılı. Dosya: {result}")
-            if request.type == "audio":
-                return FileResponse(result, media_type="audio/mp3", headers={
-                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
-                })
-            elif request.type == "video":
-                return FileResponse(result, media_type="video/mp4", headers={
-                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
-                })
+            logger.info(f"[✅] YouTube indirme başarılı. Dosya: {result}")
+            media_type = "audio/mp3" if request.type == "audio" else "video/mp4"
+            return FileResponse(
+                result,
+                media_type=media_type,
+                headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"}
+            )
 
         logger.warning("[⚠️] Dosya döndürülemedi. Result None döndü.")
         raise HTTPException(status_code=500, detail="Video indirilemedi.")
 
     except Exception as e:
         error_trace = traceback.format_exc()
-        logger.error(f"[🔥] Hata oluştu: {e}\n{error_trace}")
+        logger.error(f"[🔥] YouTube indirme hatası: {e}\n{error_trace}")
         raise HTTPException(status_code=500, detail=f"Hata: {str(e)}")
     
 
