@@ -96,6 +96,10 @@ class InstagramDownloadService:
             try:
                 mp3_path = os.path.join(self.download_folder, f"{file_name}.mp3")
                 clip = VideoFileClip(mp4_path)
+
+                if clip.audio is None:
+                    raise Exception("Videoda ses kanalı bulunamadı. MP3'e dönüştürülemiyor.")
+
                 clip.audio.write_audiofile(mp3_path)
                 clip.close()
 
@@ -105,6 +109,7 @@ class InstagramDownloadService:
                 return mp3_path
             except Exception as e:
                 raise Exception(f"Ses dosyası oluşturulurken hata oluştu: {e}")
+
 
         elif media_type == "video":
             try:
