@@ -1,6 +1,7 @@
 package com.example.downloadmateapp
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
@@ -34,11 +35,29 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val PREFS_NAME = "app_preferences"
         private const val KEY_THEME_MODE = "theme_mode"
+        private const val WEBVIEW_REQUEST_CODE = 1001
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        webViewLauncher = registerForActivityResult(
+            androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val cookies = result.data?.getStringExtra("cookies")
+                if (!cookies.isNullOrEmpty()) {
+                    Toast.makeText(this, "Çerez alındı ✅", Toast.LENGTH_SHORT).show()
+                    println("Gelen Çerezler: $cookies")
+                    // buradan API'ye gönderim yapılabilir
+                } else {
+                    Toast.makeText(this, "Çerez alınamadı ❌", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         // SharedPreferences ekleme
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -57,6 +76,21 @@ class MainActivity : AppCompatActivity() {
         // Spinner verilerini ata
         setupSpinners()
 
+        // Sosyal medya ikonlarını tema moduna göre ayarla
+        setSocialIconsForTheme()
+
+        binding.buttonInstagram.setOnClickListener {
+            openWebView("https://www.instagram.com/accounts/login/")
+        }
+
+        binding.buttonYouTube.setOnClickListener {
+            openWebView("https://accounts.google.com/ServiceLogin?service=youtube")
+        }
+
+        binding.buttonTwitter.setOnClickListener {
+            openWebView("https://twitter.com/i/flow/login")
+        }
+
         // Butona tıklama işlemi
         binding.buttonDownload.setOnClickListener {
             val url = binding.editTextUrl.text.toString()
@@ -74,10 +108,19 @@ class MainActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try {
+                    val cookies = getSharedPreferences("cookies", Context.MODE_PRIVATE)
+                        .getString("cookies", null)
+
+                    if (cookies.isNullOrEmpty()) {
+                        Toast.makeText(this@MainActivity, "Lütfen önce giriş yaparak çerez alın!", Toast.LENGTH_LONG).show()
+                        binding.progressBar.visibility = View.GONE
+                        return@launch
+                    }
+
                     val response = when (platform) {
-                        "youtube" -> RetrofitClient.apiService.downloadYoutube(request)
-                        "instagram" -> RetrofitClient.apiService.downloadInstagram(request)
-                        "twitter" -> RetrofitClient.apiService.downloadTwitter(request)
+                        "youtube" -> RetrofitClient.apiService.downloadYoutube(request, cookies)
+                        "instagram" -> RetrofitClient.apiService.downloadInstagram(request, cookies)
+                        "twitter" -> RetrofitClient.apiService.downloadTwitter(request, cookies)
                         else -> null
                     }
 
@@ -91,7 +134,6 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
-                            // ❗ API 500, 400 gibi başarısız cevap verdiğinde
                             val errorMsg = response.errorBody()?.string() ?: "Bilinmeyen hata oluştu."
                             Toast.makeText(this@MainActivity, "API Hatası: $errorMsg", Toast.LENGTH_LONG).show()
                         }
@@ -99,13 +141,13 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "Sunucudan yanıt alınamadı", Toast.LENGTH_LONG).show()
                     }
 
-
                 } catch (e: Exception) {
                     Toast.makeText(this@MainActivity, "Hata: ${e.message}", Toast.LENGTH_SHORT).show()
                 } finally {
                     binding.progressBar.visibility = View.GONE
                 }
             }
+
         }
 
 
@@ -209,6 +251,8 @@ class MainActivity : AppCompatActivity() {
                     .edit()
                     .putInt(KEY_THEME_MODE, mode)
                     .apply()
+
+                setSocialIconsForTheme()
             }
 
 
@@ -221,6 +265,44 @@ class MainActivity : AppCompatActivity() {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
+
+    private fun setSocialIconsForTheme() {
+        val isDark = isNightMode()
+
+        val instagramIcon = if (isDark) R.drawable.ic_d_instagram else R.drawable.ic_instagram
+        val youtubeIcon = if (isDark) R.drawable.ic_d_youtube else R.drawable.ic_youtube
+        val twitterIcon = if (isDark) R.drawable.ic_d_twitter else R.drawable.ic_twitter
+
+        if (isDark) {
+            binding.buttonInstagram.setImageResource(instagramIcon)
+            binding.buttonYouTube.setImageResource(youtubeIcon)
+            binding.buttonTwitter.setImageResource(twitterIcon)
+
+            // Tint'i temizle
+            binding.buttonInstagram.imageTintList = null
+            binding.buttonYouTube.imageTintList = null
+            binding.buttonTwitter.imageTintList = null
+        } else {
+            binding.buttonInstagram.setImageResource(instagramIcon)
+            binding.buttonYouTube.setImageResource(youtubeIcon)
+            binding.buttonTwitter.setImageResource(twitterIcon)
+
+            // Light mode'da ikonlar koyuysa beyaz tint verelim
+            val white = getColor(android.R.color.white)
+            binding.buttonInstagram.setColorFilter(white)
+            binding.buttonYouTube.setColorFilter(white)
+            binding.buttonTwitter.setColorFilter(white)
+        }
+    }
+    private lateinit var webViewLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
+
+    private fun openWebView(url: String) {
+        val intent = Intent(this, WebViewActivity::class.java)
+        intent.putExtra("url", url)
+        webViewLauncher.launch(intent)
+    }
+
+
 
 
 

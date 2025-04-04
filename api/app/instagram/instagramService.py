@@ -47,15 +47,27 @@ class InstagramDownloadService:
 
     
 
-    def download_media(self, url, file_name=None, media_type="video"):
+    def download_media(self, url, file_name=None, media_type="video", cookies=None):
         """
         Instagram videosunu indirir.
         media_type = 'video' -> .mp4, 'audio' -> .mp3
+        cookies: string olarak alınır (örneğin 'sessionid=abc123; ds_user_id=xyz456')
         """
         try:
             shortcode = self.extract_shortcode(url)
         except Exception as e:
             raise Exception(f"URL'den shortcode çıkarılamadı: {e}")
+
+        # 🍪 Eğer çerez geldiyse instaloader'a yükle
+        if cookies:
+            try:
+                cookie_file_path = os.path.join(self.download_folder, "cookies.txt")
+                with open(cookie_file_path, "w", encoding="utf-8") as f:
+                    f.write(cookies)
+                self.instaloader.context.load_session_from_file(username=None, filename=cookie_file_path)
+                print("[🍪] Çerezler yüklendi")
+            except Exception as e:
+                raise Exception(f"Çerez yüklenirken hata oluştu: {e}")
 
         try:
             post = instaloader.Post.from_shortcode(self.instaloader.context, shortcode)
@@ -104,6 +116,7 @@ class InstagramDownloadService:
                 raise Exception(f"Video dosyası yeniden adlandırılırken veya taşınırken hata oluştu: {e}")
         else:
             raise ValueError("Geçersiz medya tipi. 'audio' veya 'video' olmalıdır.")
+
 
 
 

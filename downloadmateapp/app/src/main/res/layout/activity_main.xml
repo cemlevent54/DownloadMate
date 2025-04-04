@@ -21,15 +21,6 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- URL EditText -->
-
-    <!-- Platform Spinner -->
-
-    <!-- Type Spinner -->
-
-    <!-- Download Button -->
-
-    <!-- Progress Bar -->
-
     <EditText
         android:id="@+id/editTextUrl"
         android:layout_width="0dp"
@@ -44,10 +35,10 @@
         android:inputType="textUri"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topAppBar" />
 
+    <!-- Platform Spinner -->
     <Spinner
         android:id="@+id/spinnerPlatform"
         android:layout_width="0dp"
@@ -57,10 +48,10 @@
         android:layout_marginEnd="20dp"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextUrl" />
 
+    <!-- Type Spinner -->
     <Spinner
         android:id="@+id/spinnerType"
         android:layout_width="0dp"
@@ -70,10 +61,10 @@
         android:layout_marginEnd="20dp"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerPlatform" />
 
+    <!-- Download Button -->
     <Button
         android:id="@+id/buttonDownload"
         android:layout_width="0dp"
@@ -86,10 +77,10 @@
         android:textColor="@color/buttonText"
         android:text="İndir"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerType" />
 
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -98,6 +89,47 @@
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/buttonDownload"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Social Buttons -->
+    <LinearLayout
+        android:id="@+id/socialButtonsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/buttonInstagram"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/circle_background"
+            android:src="@drawable/ic_instagram"
+            android:contentDescription="Instagram" />
+
+        <ImageButton
+            android:id="@+id/buttonYouTube"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/circle_background"
+            android:src="@drawable/ic_youtube"
+            android:contentDescription="YouTube" />
+
+        <ImageButton
+            android:id="@+id/buttonTwitter"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/circle_background"
+            android:src="@drawable/ic_twitter"
+            android:contentDescription="Twitter" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
