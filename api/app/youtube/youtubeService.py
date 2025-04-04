@@ -62,8 +62,11 @@ class YoutubeDownloadService:
             }]
         }
 
-        if cookie_file_path:
-            ydl_video_opts['cookiefile'] = cookie_file_path
+        # 🧠 Yeni: Cookie string header olarak veriliyor
+        if cookies:
+            ydl_video_opts['http_headers'] = {
+                "Cookie": cookies
+            }
 
         try:
             print(f"Video ve ses indiriliyor: {file_name}")
@@ -152,12 +155,6 @@ class YoutubeDownloadService:
         webm_path = os.path.join(self.download_folder, file_name + ".webm")
         print(f"[⬇] WebM indirme yolu: {webm_path}")
 
-        cookie_file_path = None
-        if cookies:
-            cookie_file_path = os.path.join(self.folder, "cookies.txt")
-            with open(cookie_file_path, "w", encoding="utf-8") as f:
-                f.write(cookies)
-
         ydl_opts = {
             'format': 'bestaudio/best',
             'geo_bypass': True,
@@ -165,8 +162,11 @@ class YoutubeDownloadService:
             'postprocessors': []
         }
 
-        if cookie_file_path:
-            ydl_opts['cookiefile'] = cookie_file_path
+        # 🧠 Cookie varsa header olarak ekle
+        if cookies:
+            ydl_opts['http_headers'] = {
+                "Cookie": cookies
+            }
 
         try:
             print(f"[🔍] WebM indiriliyor: {url}")
