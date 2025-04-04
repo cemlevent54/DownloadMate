@@ -11,6 +11,7 @@ from fastapi.responses import FileResponse
 import os
 from fastapi.logger import logger
 import traceback2 as traceback
+from fastapi import Request  # <--- request nesnesini alabilmek için
 
 
 app = FastAPI()
@@ -57,25 +58,32 @@ async def youtube_download(request: YouTubeDownloadRequest):
     
 
 # instagram indirme isteği için endpoint
+
+
 @app.post("/instagram/download")
-async def instagram_download(request: InstagramDownloadRequest):
+async def instagram_download(request: InstagramDownloadRequest, fastapi_request: Request):
     try:
         logger.info(f"[▶️] Instagram indirme isteği alındı: URL={request.url}, TYPE={request.type}")
 
-        # İndirme işlemi başlatılır
-        result = instagram_downloader.download(request.url, request.type)
+        # 🍪 Header'lardan Cookie al
+        cookies = fastapi_request.headers.get("cookie")
+        if cookies:
+            logger.info(f"[🍪] Cookie bulundu, gönderiliyor...")
+        else:
+            logger.warning("[❌] Cookie header'ı bulunamadı")
 
-        # İndirme işlemi başarıyla tamamlandıysa dosyayı kullanıcıya döndür
+        # İndirme işlemi başlatılır (cookie parametresi eklendi)
+        result = instagram_downloader.download(request.url, request.type, cookies=cookies)
+
+        # Başarılıysa dosyayı döndür
         if result:
             logger.info(f"[✅] Instagram indirme başarılı. Dosya: {result}")
-            if request.type == "audio":
-                return FileResponse(result, media_type="audio/mp3", headers={
-                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
-                })
-            elif request.type == "video":
-                return FileResponse(result, media_type="video/mp4", headers={
-                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
-                })
+            media_type = "audio/mp3" if request.type == "audio" else "video/mp4"
+            return FileResponse(
+                result,
+                media_type=media_type,
+                headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"}
+            )
 
         logger.warning("[⚠️] Instagram dosya döndürülemedi. Result None döndü.")
         raise HTTPException(status_code=500, detail="Instagram videosu indirilemedi.")
@@ -84,6 +92,7 @@ async def instagram_download(request: InstagramDownloadRequest):
         error_trace = traceback.format_exc()
         logger.error(f"[🔥] Instagram indirme hatası: {e}\n{error_trace}")
         raise HTTPException(status_code=500, detail=f"Hata: {str(e)}")
+
 
     
 # Twitter indirme isteği için endpoint
