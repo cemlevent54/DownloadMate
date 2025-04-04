@@ -13,6 +13,7 @@ import com.example.downloadmateapp.databinding.ActivityWebviewBinding
 class WebViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWebviewBinding
+    private var cookiesSaved = false // ✅ Tek seferlik kontrol için flag
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +31,13 @@ class WebViewActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, finishedUrl: String?) {
                 super.onPageFinished(view, finishedUrl)
 
-                finishedUrl?.let {
+                if (!cookiesSaved && finishedUrl?.contains("instagram.com") == true) {
                     val cookieManager = CookieManager.getInstance()
-                    val cookies = cookieManager.getCookie(it)
+                    val cookies = cookieManager.getCookie(finishedUrl)
 
                     if (!cookies.isNullOrBlank()) {
+                        cookiesSaved = true // ✅ Sadece bir kere çalışmasını sağla
+
                         val resultIntent = Intent().apply {
                             putExtra("cookies", cookies)
                         }
@@ -46,7 +49,7 @@ class WebViewActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        finish() // Geri dön
+                        finish()
                     }
                 }
             }

@@ -71,11 +71,12 @@ async def instagram_download(request: InstagramDownloadRequest, fastapi_request:
             logger.info(f"[🍪] Cookie bulundu, gönderiliyor...")
         else:
             logger.warning("[❌] Cookie header'ı bulunamadı")
+            raise HTTPException(status_code=401, detail="Lütfen önce giriş yaparak çerez alın.")
 
-        # İndirme işlemi başlatılır (cookie parametresi eklendi)
+        # ⏬ İndirme işlemi (cookie parametresi ile)
         result = instagram_downloader.download(request.url, request.type, cookies=cookies)
 
-        # Başarılıysa dosyayı döndür
+        # ✅ Başarılıysa dosyayı döndür
         if result:
             logger.info(f"[✅] Instagram indirme başarılı. Dosya: {result}")
             media_type = "audio/mp3" if request.type == "audio" else "video/mp4"

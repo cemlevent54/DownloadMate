@@ -5,6 +5,7 @@ import datetime
 from .utils import sanitize_filename
 import re
 from moviepy import VideoFileClip
+from requests.utils import cookiejar_from_dict
 
 class InstagramDownloadService:
     def __init__(self):
@@ -58,16 +59,15 @@ class InstagramDownloadService:
         except Exception as e:
             raise Exception(f"URL'den shortcode çıkarılamadı: {e}")
 
-        # 🍪 Eğer çerez geldiyse instaloader'a yükle
+        # 2. 🍪 Eğer cookie varsa context içine doğrudan inject et
         if cookies:
             try:
-                cookie_file_path = os.path.join(self.download_folder, "cookies.txt")
-                with open(cookie_file_path, "w", encoding="utf-8") as f:
-                    f.write(cookies)
-                self.instaloader.context.load_session_from_file(username=None, filename=cookie_file_path)
-                print("[🍪] Çerezler yüklendi")
+                cookie_dict = dict(item.strip().split("=", 1) for item in cookies.split("; ") if "=" in item)
+                jar = cookiejar_from_dict(cookie_dict)
+                self.instaloader.context._session.cookies = jar
+                print("[🍪] Çerezler instaloader'a yüklendi")
             except Exception as e:
-                raise Exception(f"Çerez yüklenirken hata oluştu: {e}")
+                raise Exception(f"Çerez parse edilirken hata oluştu: {e}")
 
         try:
             post = instaloader.Post.from_shortcode(self.instaloader.context, shortcode)

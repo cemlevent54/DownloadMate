@@ -9,9 +9,15 @@ class InstagramDownloadAPI:
     def download(self, url: str, type: str, cookies: Optional[str] = None):
         try:
             timestamp = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
-            file_name = f"{timestamp}"  # Dosya adı sadece zaman damgası
+            file_name = f"{timestamp}"  # Dosya adı zaman damgası
 
-            result_path = self.instagram_service.download_media(url, file_name, type, cookies)
+            # 🍪 cookies argümanı eklendi
+            result_path = self.instagram_service.download_media(
+                url=url,
+                file_name=file_name,
+                media_type=type,
+                cookies=cookies
+            )
 
             if result_path is None:
                 raise Exception("Instagram medya indirilemedi. 'None' döndü.")
@@ -19,6 +25,4 @@ class InstagramDownloadAPI:
             return result_path
 
         except Exception as e:
-            # Burada exception direkt yükseltiliyor ki FastAPI tarafı detaylı şekilde handle edebilsin
             raise Exception(f"InstagramDownloadAPI -> İndirme sırasında hata oluştu: {e}")
-    

@@ -50,10 +50,16 @@ class MainActivity : AppCompatActivity() {
             if (result.resultCode == RESULT_OK) {
                 val cookies = result.data?.getStringExtra("cookies")
                 if (!cookies.isNullOrEmpty()) {
-                    Toast.makeText(this, "Çerez alındı ✅", Toast.LENGTH_SHORT).show()
+                    // 1️⃣ Kalıcı olarak kaydet
+                    getSharedPreferences("cookies", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("cookies", cookies)
+                        .apply()
+
+                    Toast.makeText(this, "Çerez alındı ✅\n${cookies.take(100)}...", Toast.LENGTH_LONG).show()
                     println("Gelen Çerezler: $cookies")
-                    // buradan API'ye gönderim yapılabilir
-                } else {
+                }
+                else {
                     Toast.makeText(this, "Çerez alınamadı ❌", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -115,7 +121,10 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "Lütfen önce giriş yaparak çerez alın!", Toast.LENGTH_LONG).show()
                         binding.progressBar.visibility = View.GONE
                         return@launch
+                    } else {
+                        println("Kullanılacak çerez: $cookies") // ✅ Debug için
                     }
+
 
                     val response = when (platform) {
                         "youtube" -> RetrofitClient.apiService.downloadYoutube(request, cookies)
