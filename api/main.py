@@ -60,20 +60,31 @@ async def youtube_download(request: YouTubeDownloadRequest):
 @app.post("/instagram/download")
 async def instagram_download(request: InstagramDownloadRequest):
     try:
+        logger.info(f"[▶️] Instagram indirme isteği alındı: URL={request.url}, TYPE={request.type}")
+
         # İndirme işlemi başlatılır
         result = instagram_downloader.download(request.url, request.type)
 
         # İndirme işlemi başarıyla tamamlandıysa dosyayı kullanıcıya döndür
         if result:
+            logger.info(f"[✅] Instagram indirme başarılı. Dosya: {result}")
             if request.type == "audio":
-                return FileResponse(result, media_type="audio/mp3", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
+                return FileResponse(result, media_type="audio/mp3", headers={
+                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
+                })
             elif request.type == "video":
-                return FileResponse(result, media_type="video/mp4", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
-        
-        raise HTTPException(status_code=500, detail="Video indirilemedi.")
+                return FileResponse(result, media_type="video/mp4", headers={
+                    "Content-Disposition": f"attachment; filename={os.path.basename(result)}"
+                })
+
+        logger.warning("[⚠️] Instagram dosya döndürülemedi. Result None döndü.")
+        raise HTTPException(status_code=500, detail="Instagram videosu indirilemedi.")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        error_trace = traceback.format_exc()
+        logger.error(f"[🔥] Instagram indirme hatası: {e}\n{error_trace}")
+        raise HTTPException(status_code=500, detail=f"Hata: {str(e)}")
+
     
 # Twitter indirme isteği için endpoint
 @app.post("/twitter/download")

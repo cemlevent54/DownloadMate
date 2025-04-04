@@ -54,21 +54,32 @@ class InstagramDownloadService:
         """
         try:
             shortcode = self.extract_shortcode(url)
+        except Exception as e:
+            raise Exception(f"URL'den shortcode çıkarılamadı: {e}")
+
+        try:
             post = instaloader.Post.from_shortcode(self.instaloader.context, shortcode)
-            
+        except Exception as e:
+            raise Exception(f"Instagram postu alınamadı: {e}")
+
+        try:
             print(f"[▶] İndirme başlatılıyor: {shortcode}")
             self.instaloader.download_post(post, target=self.download_folder)
+        except Exception as e:
+            raise Exception(f"Post indirme işlemi başarısız: {e}")
 
-            # .mp4 dosyasını bul
+        # .mp4 dosyasını bul
+        try:
             mp4_files = [f for f in os.listdir(self.download_folder) if f.endswith(".mp4")]
             if not mp4_files:
-                print("[!] .mp4 dosyası bulunamadı.")
-                return None
-
+                raise FileNotFoundError(".mp4 dosyası bulunamadı. İndirme başarısız olabilir.")
             latest_file = max(mp4_files, key=lambda f: os.path.getctime(os.path.join(self.download_folder, f)))
             mp4_path = os.path.join(self.download_folder, latest_file)
+        except Exception as e:
+            raise Exception(f".mp4 dosyası hazırlanırken hata oluştu: {e}")
 
-            if media_type == "audio":
+        if media_type == "audio":
+            try:
                 mp3_path = os.path.join(self.download_folder, f"{file_name}.mp3")
                 clip = VideoFileClip(mp4_path)
                 clip.audio.write_audiofile(mp3_path)
@@ -78,18 +89,22 @@ class InstagramDownloadService:
                 self.clean_folder()
                 print(f"[🎵] Ses dosyası oluşturuldu: {mp3_path}")
                 return mp3_path
+            except Exception as e:
+                raise Exception(f"Ses dosyası oluşturulurken hata oluştu: {e}")
 
-            else:  # video
+        elif media_type == "video":
+            try:
                 new_name = f"{file_name}.mp4"
                 new_path = os.path.join(self.download_folder, new_name)
                 shutil.move(mp4_path, new_path)
                 self.clean_folder()
                 print(f"[🎥] Video dosyası oluşturuldu: {new_path}")
                 return new_path
+            except Exception as e:
+                raise Exception(f"Video dosyası yeniden adlandırılırken veya taşınırken hata oluştu: {e}")
+        else:
+            raise ValueError("Geçersiz medya tipi. 'audio' veya 'video' olmalıdır.")
 
-        except Exception as e:
-            print(f"[download_media] Hata: {e}")
-            return None 
 
 
     def clean_folder(self):

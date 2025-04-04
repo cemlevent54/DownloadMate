@@ -1,8 +1,10 @@
 package com.example.downloadmateapp
 
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.View
 import android.widget.AdapterView
@@ -14,7 +16,16 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.downloadmateapp.databinding.ActivityMainBinding;
+import com.example.downloadmateapp.databinding.ActivityMainBinding
+
+import androidx.lifecycle.lifecycleScope
+import com.example.downloadmateapp.api.RetrofitClient
+import com.example.downloadmateapp.network.DownloadRequest
+import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -57,9 +68,46 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Geçerli girişler varsa devam et
-            println("URL: $url, Platform: $platform, Tür: $type")
+            binding.progressBar.visibility = View.VISIBLE
+
+            val request = DownloadRequest(url = url, type = type)
+
+            lifecycleScope.launch {
+                try {
+                    val response = when (platform) {
+                        "youtube" -> RetrofitClient.apiService.downloadYoutube(request)
+                        "instagram" -> RetrofitClient.apiService.downloadInstagram(request)
+                        "twitter" -> RetrofitClient.apiService.downloadTwitter(request)
+                        else -> null
+                    }
+
+                    if (response != null) {
+                        if (response.isSuccessful) {
+                            val contentDisposition = response.headers()["Content-Disposition"]
+                            response.body()?.let { body ->
+                                val savedFile = saveToDownloadMateFolder(body, contentDisposition, this@MainActivity)
+                                if (savedFile != null) {
+                                    Toast.makeText(this@MainActivity, "Kaydedildi: ${savedFile.name}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        } else {
+                            // ❗ API 500, 400 gibi başarısız cevap verdiğinde
+                            val errorMsg = response.errorBody()?.string() ?: "Bilinmeyen hata oluştu."
+                            Toast.makeText(this@MainActivity, "API Hatası: $errorMsg", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(this@MainActivity, "Sunucudan yanıt alınamadı", Toast.LENGTH_LONG).show()
+                    }
+
+
+                } catch (e: Exception) {
+                    Toast.makeText(this@MainActivity, "Hata: ${e.message}", Toast.LENGTH_SHORT).show()
+                } finally {
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
         }
+
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -68,6 +116,63 @@ class MainActivity : AppCompatActivity() {
             insets
         }
     }
+
+    private fun writeResponseBodyToDisk(body: ResponseBody, file: File) {
+        try {
+            val input: InputStream = body.byteStream()
+            val output = FileOutputStream(file)
+
+            input.use { inputStream ->
+                output.use { fileOut ->
+                    inputStream.copyTo(fileOut)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun saveToDownloadMateFolder(
+        responseBody: ResponseBody,
+        contentDisposition: String?,
+        context: Context
+    ): File? {
+        try {
+            // 🔍 Dosya adını Content-Disposition header'ından çek
+            val fileName = contentDisposition
+                ?.substringAfter("filename=")
+                ?.replace("\"", "")
+                ?: "indirilen_dosya_${System.currentTimeMillis()}.tmp"
+
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val appFolder = File(downloadsDir, "DownloadMateDownloads")
+            if (!appFolder.exists()) {
+                val created = appFolder.mkdirs()
+                if (!created) {
+                    Toast.makeText(context, "Klasör oluşturulamadı", Toast.LENGTH_SHORT).show()
+                    return null
+                }
+            }
+
+            val file = File(appFolder, fileName)
+            val inputStream = responseBody.byteStream()
+            val outputStream = FileOutputStream(file)
+
+            inputStream.use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            return file
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Dosya kaydedilirken hata oluştu", Toast.LENGTH_SHORT).show()
+            return null
+        }
+    }
+
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
