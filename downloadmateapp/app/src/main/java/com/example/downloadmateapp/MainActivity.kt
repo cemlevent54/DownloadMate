@@ -7,12 +7,15 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.DocumentsContract
 import android.view.Menu
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
@@ -26,7 +29,9 @@ import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
+import androidx.core.content.FileProvider
 import java.io.InputStream
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,12 +46,55 @@ class MainActivity : AppCompatActivity() {
         private const val PREF_KEY_GALLERY_PERMISSION = "allow_gallery_save"
         private const val GALLERY_PREF_CHECKED_KEY = "gallery_pref_checked"
     }
+    private lateinit var openFolderLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
+    private lateinit var downloadFolderLauncher: ActivityResultLauncher<Intent>
+
+    private fun saveFolderUri(uri: Uri) {
+        contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+            .edit()
+            .putString("saved_folder_uri", uri.toString())
+            .apply()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        openFolderLauncher = registerForActivityResult(
+            androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val folderUri = result.data?.data ?: return@registerForActivityResult
+                contentResolver.takePersistableUriPermission(
+                    folderUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+                getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                    .edit()
+                    .putString("downloads_uri", folderUri.toString())
+                    .apply()
+            }
+        }
+
+        downloadFolderLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val folderUri = result.data?.data ?: return@registerForActivityResult
+                contentResolver.takePersistableUriPermission(
+                    folderUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+                getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                    .edit()
+                    .putString("downloads_uri", folderUri.toString())
+                    .apply()
+                Toast.makeText(this, "✅ Download klasörü kaydedildi", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         // Launcher - WebView
         webViewLauncher = registerForActivityResult(
@@ -194,27 +242,74 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttonOpenDownload.setOnClickListener {
-            try {
-                val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val appFolder = File(downloadsDir, "DownloadMateDownloads")
+            val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+            val uriStr = prefs.getString("downloads_uri", null)
 
-                if (!appFolder.exists()) {
-                    Toast.makeText(this, "Klasör bulunamadı.", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+            if (uriStr != null) {
+                try {
+                    val treeUri = Uri.parse(uriStr)
+                    val docUri = DocumentsContract.buildDocumentUriUsingTree(
+                        treeUri,
+                        DocumentsContract.getTreeDocumentId(treeUri)
+                    )
+
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        setDataAndType(docUri, DocumentsContract.Document.MIME_TYPE_DIR)
+                        addFlags(
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        )
+                    }
+
+                    startActivity(intent)
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "❗ Klasör açılamadı: ${e.message}", Toast.LENGTH_LONG).show()
                 }
+            } else {
+                Toast.makeText(this, "📂 Lütfen önce Download klasörünü seçin", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(Uri.fromFile(appFolder), "resource/folder")
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                    addFlags(
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                    )
                 }
-
-                startActivity(intent)
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(this, "❗ Klasör açılamadı", Toast.LENGTH_SHORT).show()
+                downloadFolderLauncher.launch(intent)
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
