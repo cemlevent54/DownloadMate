@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -15,10 +17,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", "\"${getBaseUrl()}\"")
     }
+
+
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true // ✅ Bunu ekledik
     }
 
     buildTypes {
@@ -37,6 +44,15 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+
+}
+
+fun getBaseUrl(): String {
+    val props = Properties()
+    val file = rootProject.file("local.properties")
+    if (file.exists()) props.load(file.inputStream())
+    return props.getProperty("BASE_URL", "https://local-pippa-downloadmate-82e1c8e1.koyeb.app/")
 }
 
 dependencies {
