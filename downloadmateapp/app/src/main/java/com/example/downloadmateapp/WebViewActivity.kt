@@ -32,17 +32,20 @@ class WebViewActivity : AppCompatActivity() {
                 super.onPageFinished(view, finishedUrl)
 
                 if (!cookiesSaved && finishedUrl != null && shouldCaptureCookies(finishedUrl)) {
-                    val cookieManager = CookieManager.getInstance()
-                    val cookies = cookieManager.getCookie(finishedUrl)
+                    val platform = detectPlatform(finishedUrl)
+                    if (platform != null) {
+                        val cookieUrl = getPlatformCookieDomain(platform)
+                        val cookieManager = CookieManager.getInstance()
+                        val cookies = cookieManager.getCookie(cookieUrl)
 
-                    if (!cookies.isNullOrBlank()) {
-                        cookiesSaved = true
+                        if (!cookies.isNullOrBlank()) {
+                            cookiesSaved = true
 
-                        val platform = detectPlatform(finishedUrl)
-                        if (platform != null) {
-                            val prefs = getSharedPreferences("cookies", Context.MODE_PRIVATE)
-                            prefs.edit().putString("cookies_$platform", cookies).apply()
+                            // Çerezleri sakla
+                            getSharedPreferences("cookies", Context.MODE_PRIVATE)
+                                .edit().putString("cookies_$platform", cookies).apply()
 
+                            // Aktivite sonucu olarak çerezi döndür
                             val resultIntent = Intent().apply {
                                 putExtra("platform", platform)
                                 putExtra("cookies", cookies)
@@ -76,6 +79,15 @@ class WebViewActivity : AppCompatActivity() {
             url.contains("youtube.com") || url.contains("google.com") -> "youtube"
             url.contains("twitter.com") || url.contains("x.com") -> "twitter"
             else -> null
+        }
+    }
+
+    private fun getPlatformCookieDomain(platform: String): String {
+        return when (platform) {
+            "youtube" -> "https://www.youtube.com"
+            "instagram" -> "https://www.instagram.com"
+            "twitter" -> "https://twitter.com"
+            else -> ""
         }
     }
 }

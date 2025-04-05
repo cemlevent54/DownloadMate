@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttonYouTube.setOnClickListener {
-            openWebView("https://accounts.google.com/ServiceLogin?service=youtube")
+            openWebView("https://www.youtube.com/feed/subscriptions")
         }
 
         binding.buttonTwitter.setOnClickListener {
