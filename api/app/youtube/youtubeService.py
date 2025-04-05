@@ -51,7 +51,13 @@ class YoutubeDownloadService:
             netscape_cookies = self.convert_cookie_string_to_netscape_format(cookies)
             with open(cookie_file_path, "w", encoding="utf-8") as f:
                 f.write(netscape_cookies)
-
+            
+            print(f"[🍪] Çerez dosyası yazıldı: {cookie_file_path}")
+            with open(cookie_file_path, "r", encoding="utf-8") as f:
+                print("[🧾] Çerez dosyasından okunan içerik:")
+                print(f.read())
+            
+        
         ydl_video_opts = {
             'format': f'{quality}+bestaudio/best',
             'geo_bypass': True,

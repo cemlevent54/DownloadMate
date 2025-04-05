@@ -13,54 +13,59 @@ import com.example.downloadmateapp.databinding.ActivityWebviewBinding
 class WebViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWebviewBinding
-    private var cookiesSaved = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val url = intent.getStringExtra("url") ?: "https://www.google.com"
+        val url = intent.getStringExtra("url") ?: "https://www.youtube.com"
 
         binding.webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
         }
 
+        // 🔁 Her girişte çerez temizle
+        CookieManager.getInstance().removeAllCookies(null)
+        CookieManager.getInstance().flush()
+
         binding.webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, finishedUrl: String?) {
                 super.onPageFinished(view, finishedUrl)
 
-                if (!cookiesSaved && finishedUrl != null && shouldCaptureCookies(finishedUrl)) {
-                    val platform = detectPlatform(finishedUrl)
-                    if (platform != null) {
-                        val cookieUrl = getPlatformCookieDomain(platform)
-                        val cookieManager = CookieManager.getInstance()
-                        val cookies = cookieManager.getCookie(cookieUrl)
+                if (finishedUrl != null && detectPlatform(finishedUrl) == "youtube") {
+                    val cookieManager = CookieManager.getInstance()
+                    val rawCookies = cookieManager.getCookie("https://www.youtube.com") ?: ""
 
-                        if (!cookies.isNullOrBlank()) {
-                            cookiesSaved = true
+                    // ✅ Gerekli çerezler kontrol listesi
+                    val requiredCookies = listOf("SID", "HSID", "SSID", "PREF", "YSC")
+                    val cookieMap = rawCookies.split(";").mapNotNull {
+                        val parts = it.trim().split("=", limit = 2)
+                        if (parts.size == 2) parts[0] to parts[1] else null
+                    }.toMap()
 
-                            // Çerezleri sakla
-                            getSharedPreferences("cookies", Context.MODE_PRIVATE)
-                                .edit().putString("cookies_$platform", cookies).apply()
+                    val missingCookies = requiredCookies.filter { it !in cookieMap }
 
-                            // Aktivite sonucu olarak çerezi döndür
-                            val resultIntent = Intent().apply {
-                                putExtra("platform", platform)
-                                putExtra("cookies", cookies)
-                            }
+                    if (missingCookies.isEmpty()) {
+                        // 🎯 Tüm çerezler varsa kaydet
+                        getSharedPreferences("cookies", Context.MODE_PRIVATE)
+                            .edit().putString("cookies_youtube", rawCookies).apply()
 
-                            setResult(RESULT_OK, resultIntent)
-
-                            Toast.makeText(
-                                this@WebViewActivity,
-                                "$platform çerezleri kaydedildi ✅",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            finish()
+                        val resultIntent = Intent().apply {
+                            putExtra("platform", "youtube")
+                            putExtra("cookies", rawCookies)
                         }
+
+                        setResult(RESULT_OK, resultIntent)
+                        Toast.makeText(this@WebViewActivity, "Çerezler alındı ✅", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@WebViewActivity,
+                            "Eksik çerezler: ${missingCookies.joinToString(", ")}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -69,25 +74,12 @@ class WebViewActivity : AppCompatActivity() {
         binding.webView.loadUrl(url)
     }
 
-    private fun shouldCaptureCookies(url: String): Boolean {
-        return detectPlatform(url) != null
-    }
-
     private fun detectPlatform(url: String): String? {
         return when {
-            url.contains("instagram.com") -> "instagram"
             url.contains("youtube.com") || url.contains("google.com") -> "youtube"
+            url.contains("instagram.com") -> "instagram"
             url.contains("twitter.com") || url.contains("x.com") -> "twitter"
             else -> null
-        }
-    }
-
-    private fun getPlatformCookieDomain(platform: String): String {
-        return when (platform) {
-            "youtube" -> "https://www.youtube.com"
-            "instagram" -> "https://www.instagram.com"
-            "twitter" -> "https://twitter.com"
-            else -> ""
         }
     }
 }
