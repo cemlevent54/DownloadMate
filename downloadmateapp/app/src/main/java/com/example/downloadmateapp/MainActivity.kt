@@ -53,16 +53,18 @@ class MainActivity : AppCompatActivity() {
             androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
+                val platform = result.data?.getStringExtra("platform") // gelen platform adı
                 val cookies = result.data?.getStringExtra("cookies")
-                if (!cookies.isNullOrEmpty()) {
+                if (!cookies.isNullOrEmpty() && !platform.isNullOrEmpty()) {
                     getSharedPreferences("cookies", Context.MODE_PRIVATE)
                         .edit()
-                        .putString("cookies", cookies)
+                        .putString("cookies_$platform", cookies)
                         .apply()
-                    Toast.makeText(this, "Çerez alındı ✅", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "$platform çerezi alındı ✅", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Çerez alınamadı ❌", Toast.LENGTH_SHORT).show()
                 }
+
             }
         }
 
@@ -188,6 +190,29 @@ class MainActivity : AppCompatActivity() {
                 } finally {
                     binding.progressBar.visibility = View.GONE
                 }
+            }
+        }
+
+        binding.buttonOpenDownload.setOnClickListener {
+            try {
+                val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                val appFolder = File(downloadsDir, "DownloadMateDownloads")
+
+                if (!appFolder.exists()) {
+                    Toast.makeText(this, "Klasör bulunamadı.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(Uri.fromFile(appFolder), "resource/folder")
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+
+                startActivity(intent)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "❗ Klasör açılamadı", Toast.LENGTH_SHORT).show()
             }
         }
 
