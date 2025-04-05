@@ -10,24 +10,14 @@
 
     <!-- Toolbar -->
 
-    <ImageButton
-        android:id="@+id/buttonTwitter2"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/circle_background"
-        android:contentDescription="Twitter"
-        android:src="@drawable/ic_twitter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/buttonText"
-        app:title="DownloadMate Uygulaması"
+        app:title="DownloadMate"
         app:titleTextColor="@color/buttonBackground"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +34,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/buttonBackground"
-        android:hint="URL giriniz"
+        android:hint="@string/hint_enter_url"
         android:inputType="textUri"
         android:minHeight="48dp"
         android:textColor="@color/colorOnBackground"
@@ -55,6 +45,19 @@
         app:layout_constraintTop_toBottomOf="@id/topAppBar" />
 
     <!-- Type Spinner -->
+
+    <Spinner
+        android:id="@+id/languageSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="72dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/topAppBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topAppBar"
+        app:layout_constraintVertical_bias="0.562" />
+
     <Spinner
         android:id="@+id/spinnerPlatform"
         android:layout_width="0dp"
@@ -93,7 +96,7 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/buttonBackground"
-        android:hint="Dosya ismi (isteğe bağlı)"
+        android:hint="@string/hint_file_name"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColor="@color/colorOnBackground"
@@ -112,7 +115,7 @@
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/buttonBackground"
         android:minHeight="48dp"
-        android:text="İndir"
+        android:text="@string/text_download"
         android:textColor="@color/buttonText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -181,7 +184,7 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="@color/buttonBackground"
         android:minHeight="48dp"
-        android:text="📂 İndirilenleri Aç"
+        android:text="@string/text_open_downloads"
         android:textColor="@color/buttonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

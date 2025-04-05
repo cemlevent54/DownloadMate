@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DownloadMate</string>
+    <string name="choose_platform">Choose Platform</string>
+    <string name="choose_type">Choose Type</string>
+    <string name="fill_all_fields">⚠️ Please fill in all fields</string>
+    <string name="download_saved">✅ Saved: %1$s</string>
+    <string name="cookie_missing">Please log into your %1$s account first and retrieve cookies!</string>
+    <string name="download_folder_saved">✅ Download folder saved</string>
+    <string name="folder_not_opened">❗ Could not open folder: %1$s</string>
+    <string name="select_download_folder">📂 Please select the Download folder first</string>
+    <string name="folder_selected">📁 Folder selected</string>
+    <string name="gallery_saved">🎬 Saved to gallery: %1$s</string>
+    <string name="gallery_failed">❗ Failed to save to gallery</string>
+    <string name="gallery_uri_missing">❗ Could not get URI for gallery</string>
+    <string name="custom_folder_saved">📁 Saved to custom folder</string>
+    <string name="custom_folder_failed">❗ Error saving to folder</string>
+    <string name="download_saved_path">💾 Saved to Downloads: %1$s</string>
+    <string name="file_save_failed">❗ Error saving file</string>
+    <string name="api_error">❗API Error: %1$s</string>
+    <string name="general_error">❗ Error: %1$s</string>
+    <string name="cookie_success">%1$s cookie retrieved ✅</string>
+    <string name="cookie_fail">Could not retrieve cookie ❌</string>
+
+    <!-- arayüz -->
+    <string name="hint_enter_url">Enter URL</string>
+    <string name="hint_file_name">File name (optional)</string>
+    <string name="text_download">Download</string>
+    <string name="text_open_downloads">📂 Open Downloads</string>
+
+    <string name="select_option">Select</string>
+    <string name="type_video">Video</string>
+    <string name="type_audio">Audio</string>
+    <string name="platform_youtube">YouTube</string>
+    <string name="platform_instagram">Instagram</string>
+    <string name="platform_twitter">Twitter</string>
+
+    <!-- Toast Mesaj-->
+    <string name="msg_fill_all_fields">⚠️ Please fill in all fields</string>
+    <string name="msg_cookies_missing">Please log into your %1$s account first and retrieve cookies!</string>
+    <string name="msg_saved_file">✅ Saved: %1$s</string>
+    <string name="msg_api_error">❗API Error: %1$s</string>
+    <string name="msg_unknown_error">❗ Error: %1$s</string>
+    <string name="msg_cookies_saved">%1$s cookie retrieved ✅</string>
+    <string name="msg_cookies_failed">Could not retrieve cookie ❌</string>
+    <string name="msg_download_folder_saved">✅ Download folder saved</string>
+    <string name="msg_download_folder_not_selected">📂 Please select the Download folder first</string>
+    <string name="msg_folder_not_opened">❗ Could not open folder: %1$s</string>
+    <string name="msg_folder_selected">📁 Folder selected</string>
+    <string name="msg_cookie_success">%1$s cookie retrieved ✅</string>
+    <string name="msg_cookie_fail">Failed to retrieve cookie ❌</string>
+    <string name="msg_cookie_missing">Please log in to your %1$s account to get the cookie first!</string>
+    <string name="msg_general_error">❗ Error: %1$s</string>
+    <string name="msg_folder_open_error">❗ Could not open folder: %1$s</string>
+    <string name="msg_select_download_folder">📂 Please select the download folder first</string>
+    <string name="msg_save_error">❗ Error occurred while saving file</string>
+
+</resources>

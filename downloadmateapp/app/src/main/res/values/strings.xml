@@ -1,3 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DownloadMate</string>
+    <string name="choose_platform">Platform Seç</string>
+    <string name="choose_type">Tür Seç</string>
+    <string name="fill_all_fields">⚠️ Lütfen tüm alanları doldurun</string>
+    <string name="download_saved">✅ Kaydedildi: %1$s</string>
+    <string name="cookie_missing">Lütfen önce %1$s hesabınıza giriş yaparak çerez alın!</string>
+    <string name="download_folder_saved">✅ Download klasörü kaydedildi</string>
+    <string name="folder_not_opened">❗ Klasör açılamadı: %1$s</string>
+    <string name="select_download_folder">📂 Lütfen önce Download klasörünü seçin</string>
+    <string name="folder_selected">📁 Kayıt klasörü seçildi</string>
+    <string name="gallery_saved">🎬 Galeriye kaydedildi: %1$s</string>
+    <string name="gallery_failed">❗ Galeriye kaydedilemedi</string>
+    <string name="gallery_uri_missing">❗ Galeriye URI alınamadı</string>
+    <string name="custom_folder_saved">📁 Özel klasöre kaydedildi</string>
+    <string name="custom_folder_failed">❗ Klasöre kaydedilirken hata oluştu</string>
+    <string name="download_saved_path">💾 İndirilenlere kaydedildi: %1$s</string>
+    <string name="file_save_failed">❗ Dosya kaydedilirken hata oluştu</string>
+    <string name="api_error">❗API Hatası: %1$s</string>
+    <string name="general_error">❗ Hata: %1$s</string>
+    <string name="cookie_success">%1$s çerezi alındı ✅</string>
+    <string name="cookie_fail">Çerez alınamadı ❌</string>
+
+
+    <!-- arayüz -->
+    <string name="hint_enter_url">URL giriniz</string>
+    <string name="hint_file_name">Dosya ismi (isteğe bağlı)</string>
+    <string name="text_download">İndir</string>
+    <string name="text_open_downloads">📂 İndirilenleri Aç</string>
+
+    <string name="select_option">Seçiniz</string>
+    <string name="type_video">Video</string>
+    <string name="type_audio">Ses</string>
+    <string name="platform_youtube">YouTube</string>
+    <string name="platform_instagram">Instagram</string>
+    <string name="platform_twitter">Twitter</string>
+
+    <!-- Toast Mesaj-->
+    <string name="msg_fill_all_fields">⚠️ Lütfen tüm alanları doldurun</string>
+    <string name="msg_cookies_missing">Lütfen önce %1$s hesabınıza giriş yaparak çerez alın!</string>
+    <string name="msg_saved_file">✅ Kaydedildi: %1$s</string>
+    <string name="msg_api_error">❗API Hatası: %1$s</string>
+    <string name="msg_unknown_error">❗ Hata: %1$s</string>
+    <string name="msg_cookies_saved">%1$s çerezi alındı ✅</string>
+    <string name="msg_cookies_failed">Çerez alınamadı ❌</string>
+    <string name="msg_download_folder_saved">✅ Download klasörü kaydedildi</string>
+    <string name="msg_download_folder_not_selected">📂 Lütfen önce Download klasörünü seçin</string>
+    <string name="msg_folder_not_opened">❗ Klasör açılamadı: %1$s</string>
+    <string name="msg_folder_selected">📁 Kayıt klasörü seçildi</string>
+    <string name="msg_cookie_success">%1$s çerezi alındı ✅</string>
+    <string name="msg_cookie_fail">Çerez alınamadı ❌</string>
+    <string name="msg_cookie_missing">Lütfen önce %1$s hesabınıza giriş yaparak çerez alın!</string>
+    <string name="msg_general_error">❗ Hata: %1$s</string>
+    <string name="msg_folder_open_error">❗ Klasör açılamadı: %1$s</string>
+    <string name="msg_select_download_folder">📂 Lütfen önce Download klasörünü seçin</string>
+    <string name="msg_save_error">❗ Dosya kaydedilirken hata oluştu</string>
+
 </resources>

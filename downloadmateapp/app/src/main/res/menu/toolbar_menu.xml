@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Bu spinner item'ı Toolbara yerleşir -->
+    <item
+        android:id="@+id/language_spinner_item"
+        android:title=""
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.Spinner" />
+
     <item
         android:id="@+id/action_toggle_theme"
         android:title=""

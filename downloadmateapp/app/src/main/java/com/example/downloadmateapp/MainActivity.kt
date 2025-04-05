@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
@@ -31,6 +32,7 @@ import java.io.File
 import java.io.FileOutputStream
 import androidx.core.content.FileProvider
 import java.io.InputStream
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,20 +50,55 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var openFolderLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
     private lateinit var downloadFolderLauncher: ActivityResultLauncher<Intent>
+    private lateinit var languageSpinner: Spinner
 
-    private fun saveFolderUri(uri: Uri) {
-        contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-            .edit()
-            .putString("saved_folder_uri", uri.toString())
-            .apply()
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 1. Dili uygula
+        val savedLang = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+            .getString("selected_language", null)
+
+        if (savedLang != null) {
+            val locale = Locale(savedLang)
+            Locale.setDefault(locale)
+            val config = resources.configuration
+            config.setLocale(locale)
+            baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+        }
+
+        // 2. Spinner'ı bağla
+        languageSpinner = findViewById(R.id.languageSpinner)
+        val languages = listOf("Türkçe", "English")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languages)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        languageSpinner.adapter = adapter
+
+        // 3. Kaydedilen dile göre spinner pozisyonunu ayarla
+        val initialPos = if (savedLang == "en") 1 else 0
+        languageSpinner.setSelection(initialPos)
+
+        // 4. Seçime göre dili değiştir
+        languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedLanguage = when (position) {
+                    0 -> "tr"
+                    1 -> "en"
+                    else -> "tr"
+                }
+                if (selectedLanguage != savedLang) {
+                    setLocale(selectedLanguage)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
 
         openFolderLauncher = registerForActivityResult(
             androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -92,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                     .edit()
                     .putString("downloads_uri", folderUri.toString())
                     .apply()
-                Toast.makeText(this, "✅ Download klasörü kaydedildi", Toast.LENGTH_SHORT).show()
+                showToast(R.string.msg_download_folder_saved)
             }
         }
 
@@ -108,9 +145,9 @@ class MainActivity : AppCompatActivity() {
                         .edit()
                         .putString("cookies_$platform", cookies)
                         .apply()
-                    Toast.makeText(this, "$platform çerezi alındı ✅", Toast.LENGTH_SHORT).show()
+                    showToast(R.string.msg_cookie_success, platform)
                 } else {
-                    Toast.makeText(this, "Çerez alınamadı ❌", Toast.LENGTH_SHORT).show()
+                    showToast(R.string.msg_cookie_fail)
                 }
 
             }
@@ -127,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                     .edit()
                     .putString(PREF_KEY_FOLDER_URI, folderUri.toString())
                     .apply()
-                Toast.makeText(this, "📁 Kayıt klasörü seçildi", Toast.LENGTH_SHORT).show()
+                showToast(R.string.msg_folder_selected)
             }
         }
 
@@ -137,21 +174,8 @@ class MainActivity : AppCompatActivity() {
             prefs.getInt(KEY_THEME_MODE, AppCompatDelegate.MODE_NIGHT_NO)
         )
 
-        // Galeri tercihi sorulmamışsa sor
-        if (!prefs.getBoolean(GALLERY_PREF_CHECKED_KEY, false)) {
-            android.app.AlertDialog.Builder(this)
-                .setTitle("Galeri Kaydı")
-                .setMessage("MP4 dosyaları galeriye kaydedilsin mi?")
-                .setPositiveButton("Evet") { _, _ ->
-                    prefs.edit().putBoolean(PREF_KEY_GALLERY_PERMISSION, true)
-                        .putBoolean(GALLERY_PREF_CHECKED_KEY, true).apply()
-                }
-                .setNegativeButton("Hayır") { _, _ ->
-                    prefs.edit().putBoolean(PREF_KEY_GALLERY_PERMISSION, false)
-                        .putBoolean(GALLERY_PREF_CHECKED_KEY, true).apply()
-                }
-                .show()
-        }
+
+
 
         // UI bağlantıları
         setSupportActionBar(binding.topAppBar)
@@ -178,7 +202,7 @@ class MainActivity : AppCompatActivity() {
             val type = binding.spinnerType.selectedItem.toString().lowercase()
 
             if (platform == "seçiniz" || type == "seçiniz" || url.isBlank()) {
-                Toast.makeText(this, "⚠️ Lütfen tüm alanları doldurun", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.msg_fill_all_fields), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -191,7 +215,7 @@ class MainActivity : AppCompatActivity() {
                         .getString("cookies_$platform", null)
 
                     if (cookies.isNullOrEmpty()) {
-                        Toast.makeText(this@MainActivity, "Lütfen önce $platform hesabınıza giriş yaparak çerez alın!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, getString(R.string.msg_cookie_missing, platform), Toast.LENGTH_LONG).show()
                         binding.progressBar.visibility = View.GONE
                         return@launch
                     }
@@ -218,7 +242,11 @@ class MainActivity : AppCompatActivity() {
                                     renamed
                                 } else savedFile
 
-                                Toast.makeText(this@MainActivity, "✅ Kaydedildi: ${finalFile.name}", Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    getString(R.string.msg_saved_file, finalFile.name),
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
 
@@ -230,16 +258,18 @@ class MainActivity : AppCompatActivity() {
 
                     } else {
                         val msg = response?.errorBody()?.string() ?: "Bilinmeyen hata"
-                        Toast.makeText(this@MainActivity, "❗API Hatası: $msg", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, getString(R.string.msg_api_error, msg), Toast.LENGTH_LONG).show()
                     }
 
                 } catch (e: Exception) {
-                    Toast.makeText(this@MainActivity, "❗ Hata: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.msg_general_error, e.message), Toast.LENGTH_SHORT).show()
                 } finally {
                     binding.progressBar.visibility = View.GONE
                 }
             }
         }
+
+
 
         binding.buttonOpenDownload.setOnClickListener {
             val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -265,10 +295,10 @@ class MainActivity : AppCompatActivity() {
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(this, "❗ Klasör açılamadı: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.msg_folder_open_error, e.message), Toast.LENGTH_LONG).show()
                 }
             } else {
-                Toast.makeText(this, "📂 Lütfen önce Download klasörünü seçin", Toast.LENGTH_SHORT).show()
+                showToast(R.string.msg_select_download_folder)
 
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
                     addFlags(
@@ -280,35 +310,6 @@ class MainActivity : AppCompatActivity() {
                 downloadFolderLauncher.launch(intent)
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -336,72 +337,38 @@ class MainActivity : AppCompatActivity() {
         return saveToDownloadMateFolder(responseBody, fileName, context)
     }
 
+    private fun showToast(resId: Int, vararg formatArgs: Any?) {
+        Toast.makeText(this, getString(resId, *formatArgs), Toast.LENGTH_SHORT).show()
+    }
 
+    private fun setLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
 
+        // Tercihi kaydet
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+            .edit()
+            .putString("selected_language", languageCode)
+            .apply()
 
-    private fun saveToGallery(responseBody: ResponseBody, fileName: String, context: Context) {
-        val contentValues = android.content.ContentValues().apply {
-            put(android.provider.MediaStore.Video.Media.DISPLAY_NAME, fileName)
-            put(android.provider.MediaStore.Video.Media.MIME_TYPE, "video/mp4")
-            put(android.provider.MediaStore.Video.Media.RELATIVE_PATH, "Movies/DownloadMateApp") // 🎯 özel klasör
-        }
-
-        val uri = contentResolver.insert(
-            android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-            contentValues
-        )
-
-        if (uri != null) {
-            try {
-                contentResolver.openOutputStream(uri)?.use { output ->
-                    responseBody.byteStream().use { input -> input.copyTo(output) }
-                }
-
-                val msg = "🎬 Galeriye kaydedildi: Movies/DownloadMateApp/$fileName"
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                android.util.Log.d("DownloadMate", msg)
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(context, "❗ Galeriye kaydedilemedi", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(context, "❗ Galeriye URI alınamadı", Toast.LENGTH_SHORT).show()
-        }
+        // Aktiviteyi yeniden başlat
+        restartActivity() // recreate() yerine
     }
 
 
 
-    private fun saveToCustomFolder(
-        responseBody: ResponseBody,
-        fileName: String,
-        folderUri: Uri,
-        context: Context
-    ): File? {
-        return try {
-            val docUri = android.provider.DocumentsContract.createDocument(
-                contentResolver,
-                folderUri,
-                "application/octet-stream",
-                fileName
-            )
-            docUri?.let {
-                contentResolver.openOutputStream(it)?.use { output ->
-                    responseBody.byteStream().use { input -> input.copyTo(output) }
-                }
-            }
 
-            val msg = "📁 Özel klasöre kaydedildi"
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-            android.util.Log.d("DownloadMate", msg)
 
-            null // ContentResolver üzerinden kaydettik, fiziksel dosya objesi dönmüyoruz
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(context, "❗ Klasöre kaydedilirken hata oluştu", Toast.LENGTH_SHORT).show()
-            null
-        }
+    private fun restartActivity() {
+        val intent = intent
+        finish()
+        startActivity(intent)
     }
+
+
 
 
 
@@ -420,14 +387,20 @@ class MainActivity : AppCompatActivity() {
             val outputStream = FileOutputStream(file)
             inputStream.use { it.copyTo(outputStream) }
 
-            val msg = "💾 İndirilenler'e kaydedildi: ${file.absolutePath}"
+            val currentLang = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getString("selected_language", "tr")
+            val msg = if (currentLang == "tr") {
+                "✅ Dosya kaydedildi: ${file.absolutePath}"
+            } else {
+                "✅ File saved: ${file.absolutePath}"
+            }
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
             android.util.Log.d("DownloadMate", msg)
 
             file
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "❗ Dosya kaydedilirken hata oluştu", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.msg_folder_open_error, e.message), Toast.LENGTH_LONG).show()
             null
         }
     }
@@ -487,8 +460,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSpinners() {
-        val platforms = listOf("Seçiniz", "YouTube", "Instagram", "Twitter")
-        val types = listOf("Seçiniz", "Video", "Audio")
+        val platforms = listOf(
+            getString(R.string.select_option),
+            getString(R.string.platform_youtube),
+            getString(R.string.platform_instagram),
+            getString(R.string.platform_twitter)
+        )
+
+        val types = listOf(
+            getString(R.string.select_option),
+            getString(R.string.type_video),
+            getString(R.string.type_audio)
+        )
 
         binding.spinnerPlatform.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, platforms)
             .also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
@@ -500,10 +483,10 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 val selected = parent.getItemAtPosition(pos).toString().lowercase()
                 when (selected) {
-                    "youtube" -> binding.buttonDownload.setBackgroundColor(Color.parseColor("#FF0000"))
-                    "twitter" -> binding.buttonDownload.setBackgroundColor(Color.parseColor("#1DA1F2"))
-                    "instagram" -> binding.buttonDownload.setBackgroundColor(Color.parseColor("#c13584"))
-                    "seçiniz" -> {
+                    getString(R.string.platform_youtube).lowercase() -> binding.buttonDownload.setBackgroundColor(Color.parseColor("#FF0000"))
+                    getString(R.string.platform_twitter).lowercase() -> binding.buttonDownload.setBackgroundColor(Color.parseColor("#1DA1F2"))
+                    getString(R.string.platform_instagram).lowercase() -> binding.buttonDownload.setBackgroundColor(Color.parseColor("#c13584"))
+                    getString(R.string.select_option).lowercase() -> {
                         val defaultColor = if (isNightMode()) Color.WHITE else Color.BLACK
                         val textColor = if (isNightMode()) Color.BLACK else Color.WHITE
                         binding.buttonDownload.setBackgroundColor(defaultColor)
@@ -515,4 +498,5 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
+
 }

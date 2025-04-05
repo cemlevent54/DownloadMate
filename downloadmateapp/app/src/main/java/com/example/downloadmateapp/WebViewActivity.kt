@@ -9,6 +9,7 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.downloadmateapp.databinding.ActivityWebviewBinding
+import java.util.Locale
 
 class WebViewActivity : AppCompatActivity() {
 
@@ -16,6 +17,16 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 🌍 Locale uygula
+        val prefs = getSharedPreferences("app_preferences", MODE_PRIVATE)
+        val savedLang = prefs.getString("selected_language", "tr")
+        val locale = Locale(savedLang ?: "tr")
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+
         binding = ActivityWebviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -57,12 +68,18 @@ class WebViewActivity : AppCompatActivity() {
                         }
 
                         setResult(RESULT_OK, resultIntent)
-                        Toast.makeText(this@WebViewActivity, "$platform çerezleri alındı ✅", Toast.LENGTH_SHORT).show()
-                        finish()
-                    } else {
+                        // ✅ Başarılı toast
                         Toast.makeText(
                             this@WebViewActivity,
-                            "Eksik çerez(ler): ${missing.joinToString(", ")}",
+                            getString(R.string.msg_cookie_success, platform),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    } else {
+                        // ❌ Eksik çerezler toast
+                        Toast.makeText(
+                            this@WebViewActivity,
+                            getString(R.string.msg_cookie_missing, missing.joinToString(", ")),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
