@@ -21,6 +21,13 @@ android {
         buildConfigField("String", "BASE_URL", "\"${getBaseUrl()}\"")
     }
 
+    applicationVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            outputImpl.outputFileName = "DownloadMate.apk"
+        }
+    }
+
 
 
     buildFeatures {

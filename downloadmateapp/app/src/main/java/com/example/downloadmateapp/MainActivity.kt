@@ -164,8 +164,8 @@ class MainActivity : AppCompatActivity() {
                 context = this,
                 lifecycleScope = lifecycleScope,
                 url = binding.editTextUrl.text.toString(),
-                platform = binding.spinnerPlatform.selectedItem.toString().lowercase(),
-                type = binding.spinnerType.selectedItem.toString().lowercase(),
+                platform = SpinnerHelper.getPlatformCodeAt(binding.spinnerPlatform.selectedItemPosition),
+                type = SpinnerHelper.getTypeCodeAt(binding.spinnerType.selectedItemPosition),
                 fileNameInput = binding.editTextFileName.text.toString().trim(),
                 progressBar = binding.progressBar,
                 onSuccess = { file ->

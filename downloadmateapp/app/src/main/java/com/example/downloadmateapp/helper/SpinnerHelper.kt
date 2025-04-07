@@ -53,4 +53,22 @@ object SpinnerHelper {
             override fun onNothingSelected(parent: android.widget.AdapterView<*>) {}
         })
     }
+
+    fun getTypeCodeAt(index: Int): String {
+        return when (index) {
+            1 -> "video" // 2. sıradaki öğe
+            2 -> "audio" // 3. sıradaki öğe
+            else -> ""
+        }
+    }
+
+    fun getPlatformCodeAt(index: Int): String {
+        return when (index) {
+            1 -> "youtube"
+            2 -> "instagram"
+            3 -> "twitter"
+            else -> ""
+        }
+    }
+
 }
