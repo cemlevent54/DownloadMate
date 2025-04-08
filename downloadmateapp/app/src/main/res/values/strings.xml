@@ -59,4 +59,8 @@
     <string name="text_select_theme">Tema Seçiniz: </string>
     <string name="title_settings">Ayarlar</string>
     <string name="text_login_social_media">Sosyal Medya Login </string>
+    <string name="text_home">Anasayfa</string>
+    <string name="text_downloads">İndirilenler</string>
+    <string name="menu_settings">Ayarlar</string>
+    <string name="text_no_downloads">İndirilen içerik yok</string>
 </resources>

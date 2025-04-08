@@ -10,8 +10,9 @@ object LocaleHelper {
     private const val LANGUAGE_KEY = "selected_language"
 
     fun applySavedLocale(context: Context): Context {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val lang = prefs.getString(LANGUAGE_KEY, "tr") ?: "tr"
+//        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+//        val lang = prefs.getString(LANGUAGE_KEY, "tr") ?: "tr"
+        val lang = PrefsHelper.get(context, LANGUAGE_KEY , "tr")
         val locale = Locale(lang)
         Locale.setDefault(locale)
 
@@ -22,7 +23,6 @@ object LocaleHelper {
     }
 
     fun saveLocale(context: Context, languageCode: String) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit().putString(LANGUAGE_KEY, languageCode).apply()
+        PrefsHelper.save(context, LANGUAGE_KEY, languageCode)
     }
 }
