@@ -29,6 +29,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".WebViewActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/Theme.Downloadmateapp" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

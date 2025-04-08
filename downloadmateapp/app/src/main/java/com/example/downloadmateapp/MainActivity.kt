@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var openFolderLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
     private lateinit var downloadFolderLauncher: ActivityResultLauncher<Intent>
-    private lateinit var languageSpinner: Spinner
+    // private lateinit var languageSpinner: Spinner
 
     override fun attachBaseContext(newBase: Context) {
         val updatedContext = LocaleHelper.applySavedLocale(newBase)
@@ -78,14 +79,14 @@ class MainActivity : AppCompatActivity() {
         val savedLang = PrefsHelper.get(this, "selected_language", "tr")
 
 
-        languageSpinner = findViewById(R.id.languageSpinner)
-        LanguageHelper.setupLanguageSpinner(
-            this,
-            languageSpinner,
-            savedLang ?: "tr"
-        ) { newLang ->
-            setLocale(newLang)
-        }
+//        languageSpinner = findViewById(R.id.languageSpinner)
+//        LanguageHelper.setupLanguageSpinner(
+//            this,
+//            languageSpinner,
+//            savedLang ?: "tr"
+//        ) { newLang ->
+//            setLocale(newLang)
+//        }
 
 
 
@@ -261,24 +262,35 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
-        val toggleItem = menu?.findItem(R.id.action_toggle_theme)
-        val switch = toggleItem?.actionView as? SwitchCompat
-        val isDark = isNightMode()
-        switch?.isChecked = isDark
-        val thumbColor = if (isDark) Color.WHITE else Color.BLACK
-        val trackColor = if (isDark) Color.LTGRAY else Color.DKGRAY
-        switch?.apply {
-            setBackgroundColor(Color.TRANSPARENT)
-            thumbDrawable?.setTint(thumbColor)
-            trackDrawable?.setTint(trackColor)
-            setOnCheckedChangeListener { _, isChecked ->
-                val mode = if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-                AppCompatDelegate.setDefaultNightMode(mode)
-                PrefsHelper.saveInt(this@MainActivity, KEY_THEME_MODE, mode)
-                setSocialIconsForTheme()
-            }
-        }
+//        val toggleItem = menu?.findItem(R.id.action_toggle_theme)
+//        val switch = toggleItem?.actionView as? SwitchCompat
+//        val isDark = isNightMode()
+//        switch?.isChecked = isDark
+//        val thumbColor = if (isDark) Color.WHITE else Color.BLACK
+//        val trackColor = if (isDark) Color.LTGRAY else Color.DKGRAY
+//        switch?.apply {
+//            setBackgroundColor(Color.TRANSPARENT)
+//            thumbDrawable?.setTint(thumbColor)
+//            trackDrawable?.setTint(trackColor)
+//            setOnCheckedChangeListener { _, isChecked ->
+//                val mode = if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+//                AppCompatDelegate.setDefaultNightMode(mode)
+//                PrefsHelper.saveInt(this@MainActivity, KEY_THEME_MODE, mode)
+//                setSocialIconsForTheme()
+//            }
+//        }
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun isNightMode(): Boolean {

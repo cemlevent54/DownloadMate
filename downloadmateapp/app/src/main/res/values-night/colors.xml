@@ -10,4 +10,5 @@
     <color name="buttonBackground">#FFFFFF</color> <!-- white -->
     <color name="buttonText">#000000</color> <!-- black -->
     <color name="editTextUnderline">#FFFFFF</color>
+
 </resources>

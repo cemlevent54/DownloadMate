@@ -54,5 +54,7 @@
     <string name="msg_folder_open_error">❗ Could not open folder: %1$s</string>
     <string name="msg_select_download_folder">📂 Please select the download folder first</string>
     <string name="msg_save_error">❗ Error occurred while saving file</string>
-
+    <string name="text_select_language">Select Language: </string>
+    <string name="text_select_theme">Select Theme: </string>
+    <string name="title_settings">Settings</string>
 </resources>

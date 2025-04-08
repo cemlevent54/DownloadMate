@@ -55,5 +55,7 @@
     <string name="msg_folder_open_error">❗ Klasör açılamadı: %1$s</string>
     <string name="msg_select_download_folder">📂 Lütfen önce Download klasörünü seçin</string>
     <string name="msg_save_error">❗ Dosya kaydedilirken hata oluştu</string>
-
+    <string name="text_select_language">Dil Seçiniz: </string>
+    <string name="text_select_theme">Tema Seçiniz: </string>
+    <string name="title_settings">Ayarlar</string>
 </resources>
