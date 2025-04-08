@@ -2,9 +2,10 @@ package com.example.downloadmateapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
+import android.widget.ImageButton
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -13,16 +14,15 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.setPadding
-import com.example.downloadmateapp.helper.LanguageHelper
-import com.example.downloadmateapp.helper.LocaleHelper
-import com.example.downloadmateapp.helper.PrefsHelper
-import com.example.downloadmateapp.helper.ThemeHelper
+import com.example.downloadmateapp.helper.*
 import com.google.android.material.appbar.MaterialToolbar
-import java.util.Locale
 
-class SettingsActivity: AppCompatActivity() {
+class SettingsActivity : AppCompatActivity() {
     private lateinit var languageSpinner: Spinner
     private lateinit var switchTheme: SwitchCompat
+    private lateinit var buttonInstagram: ImageButton
+    private lateinit var buttonYouTube: ImageButton
+    private lateinit var buttonTwitter: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +43,10 @@ class SettingsActivity: AppCompatActivity() {
         // UI bağlantıları
         languageSpinner = findViewById(R.id.languageSpinner)
         switchTheme = findViewById(R.id.switchTheme)
+
+        buttonInstagram = findViewById(R.id.buttonInstagram)
+        buttonYouTube = findViewById(R.id.buttonYouTube)
+        buttonTwitter = findViewById(R.id.buttonTwitter)
 
         val selectedLang = PrefsHelper.get(this, "selected_language", "tr") ?: "tr"
         LanguageHelper.setupLanguageSpinner(
@@ -73,13 +77,21 @@ class SettingsActivity: AppCompatActivity() {
             PrefsHelper.saveInt(this, "theme_mode", newMode)
             ThemeHelper.applySavedTheme(this)
         }
-    }
 
+        // Sosyal medya butonlarını ve ikonlarını ayarla
+        val buttons = mapOf(
+            buttonInstagram to "https://www.instagram.com/accounts/login/",
+            buttonYouTube to "https://www.youtube.com/feed/subscriptions",
+            buttonTwitter to "https://twitter.com/i/flow/login"
+        )
+        SocialHelper.setupSocialButtons(this, buttons)
+        SocialHelper.setIconsForTheme(this, buttonInstagram, buttonYouTube, buttonTwitter)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed() // Geri tuşuna bastırmak
+                onBackPressedDispatcher.onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -90,5 +102,4 @@ class SettingsActivity: AppCompatActivity() {
         val updatedContext = LocaleHelper.applySavedLocale(newBase)
         super.attachBaseContext(updatedContext)
     }
-
 }

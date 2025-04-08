@@ -38,6 +38,7 @@ import com.example.downloadmateapp.helper.FolderHelper
 import com.example.downloadmateapp.helper.LanguageHelper
 import com.example.downloadmateapp.helper.LocaleHelper
 import com.example.downloadmateapp.helper.PrefsHelper
+import com.example.downloadmateapp.helper.SocialHelper
 import com.example.downloadmateapp.helper.SpinnerHelper
 import com.example.downloadmateapp.helper.ThemeHelper
 import com.example.downloadmateapp.helper.ToastHelper
@@ -156,9 +157,6 @@ class MainActivity : AppCompatActivity() {
         // UI bağlantıları
         setSupportActionBar(binding.topAppBar)
         setupSpinners()
-        setSocialIconsForTheme()
-
-        setupSocialButtons()
 
         binding.buttonDownload.setOnClickListener {
             DownloadHandler.handleDownload(
@@ -210,17 +208,7 @@ class MainActivity : AppCompatActivity() {
         return DownloadHelper.saveFileFromResponse(responseBody, fileName, context)
     }
 
-    private fun setupSocialButtons() {
-        val buttons = mapOf(
-            binding.buttonInstagram to "https://www.instagram.com/accounts/login/",
-            binding.buttonYouTube to "https://www.youtube.com/feed/subscriptions",
-            binding.buttonTwitter to "https://twitter.com/i/flow/login"
-        )
 
-        buttons.forEach { (button, url) ->
-            button.setOnClickListener { openWebView(url) }
-        }
-    }
 
     private fun openWebView(url: String) {
         val intent = Intent(this, WebViewActivity::class.java)
@@ -298,27 +286,7 @@ class MainActivity : AppCompatActivity() {
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
-    private fun setSocialIconsForTheme() {
-        val isDark = isNightMode()
-        val instagramIcon = if (isDark) R.drawable.ic_d_instagram else R.drawable.ic_instagram
-        val youtubeIcon = if (isDark) R.drawable.ic_d_youtube else R.drawable.ic_youtube
-        val twitterIcon = if (isDark) R.drawable.ic_d_twitter else R.drawable.ic_twitter
 
-        binding.buttonInstagram.setImageResource(instagramIcon)
-        binding.buttonYouTube.setImageResource(youtubeIcon)
-        binding.buttonTwitter.setImageResource(twitterIcon)
-
-        if (!isDark) {
-            val white = getColor(android.R.color.white)
-            binding.buttonInstagram.setColorFilter(white)
-            binding.buttonYouTube.setColorFilter(white)
-            binding.buttonTwitter.setColorFilter(white)
-        } else {
-            binding.buttonInstagram.imageTintList = null
-            binding.buttonYouTube.imageTintList = null
-            binding.buttonTwitter.imageTintList = null
-        }
-    }
 
     private fun setupSpinners() {
         SpinnerHelper.setupPlatformAndTypeSpinners(

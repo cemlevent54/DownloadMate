@@ -44,20 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topAppBar" />
 
-    <!-- Type Spinner -->
-    <!--
-    <Spinner
-        android:id="@+id/languageSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/topAppBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/topAppBar"
-        app:layout_constraintVertical_bias="0.25" />
-     -->
+
 
     <Spinner
         android:id="@+id/spinnerPlatform"
@@ -132,48 +119,6 @@
         app:layout_constraintTop_toBottomOf="@id/buttonDownload"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Sosyal Buttons -->
-    <LinearLayout
-        android:id="@+id/socialButtonsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBar">
-
-        <ImageButton
-            android:id="@+id/buttonInstagram"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_margin="8dp"
-            android:background="@drawable/circle_background"
-            android:contentDescription="Instagram"
-            android:src="@drawable/ic_instagram" />
-
-        <ImageButton
-            android:id="@+id/buttonYouTube"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_margin="8dp"
-            android:background="@drawable/circle_background"
-            android:contentDescription="YouTube"
-            android:src="@drawable/ic_youtube" />
-
-        <ImageButton
-            android:id="@+id/buttonTwitter"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_margin="8dp"
-            android:background="@drawable/circle_background"
-            android:contentDescription="Twitter"
-            android:src="@drawable/ic_twitter" />
-
-    </LinearLayout>
 
     <Button
         android:id="@+id/buttonOpenDownload"

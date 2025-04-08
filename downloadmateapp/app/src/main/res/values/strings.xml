@@ -58,4 +58,5 @@
     <string name="text_select_language">Dil Seçiniz: </string>
     <string name="text_select_theme">Tema Seçiniz: </string>
     <string name="title_settings">Ayarlar</string>
+    <string name="text_login_social_media">Sosyal Medya Login </string>
 </resources>
