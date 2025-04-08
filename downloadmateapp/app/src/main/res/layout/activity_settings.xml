@@ -55,7 +55,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/black" />
 
         <!-- TEMA SATIRI -->
         <LinearLayout
@@ -87,7 +87,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/black" />
 
         <TextView
             android:text="@string/text_login_social_media"
@@ -133,6 +133,47 @@
                 android:contentDescription="Twitter"
                 android:src="@drawable/ic_twitter" />
         </LinearLayout>
+
+        <!-- Ayırıcı çizgi -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/buttonText"
+            android:titleTextColor="@color/buttonBackground" />
+
+        <!-- Download Folder Path başlığı -->
+        <TextView
+            android:id="@+id/textDownloadFolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_download_folder"
+            android:textSize="18sp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/buttonText"
+            android:titleTextColor="@color/buttonBackground"/>
+
+        <!-- Klasör seçme butonu -->
+        <Button
+            android:id="@+id/buttonSelectFolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_select_folder"
+            android:backgroundTint="@color/folder_button_background"
+            android:textColor="@color/folder_button_text"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Seçilen klasör yolu -->
+        <TextView
+            android:id="@+id/textSelectedPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Download folder path: -"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/buttonText"
+            android:titleTextColor="@color/buttonBackground"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,5 +61,11 @@
     <string name="text_home">Home</string>
     <string name="text_downloads">Downloads</string>
     <string name="menu_settings">Settings</string>
-    <string name="text_no_downloads">No downloaded file</string>
+    <string name="text_download_folder">Download Folder Path</string>
+    <string name="text_select_folder">Open Folder</string>
+    <string name="text_selected_path">Download folder path: Downloads/DownloadMateDownloads</string>
+    <string name="toast_cannot_open_folder">Unable to open folder.</string>
+    <string name="text_no_downloads">No downloads found.</string>
+    <string name="toast_no_found_file">File not found!</string>
+    <string name="play">Play</string>
 </resources>

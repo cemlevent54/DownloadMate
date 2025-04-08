@@ -62,5 +62,11 @@
     <string name="text_home">Anasayfa</string>
     <string name="text_downloads">İndirilenler</string>
     <string name="menu_settings">Ayarlar</string>
-    <string name="text_no_downloads">İndirilen içerik yok</string>
+    <string name="text_download_folder">İndirme Klasörü Yolu</string>
+    <string name="text_select_folder">Klasörü Aç</string>
+    <string name="text_selected_path">İndirme klasörü yolu: Downloads/DownloadMateDownloads</string>
+    <string name="toast_cannot_open_folder">Klasör açılamadı.</string>
+    <string name="text_no_downloads">Henüz bir indirme bulunamadı.</string>
+    <string name="play">Oynat</string>
+    <string name="toast_no_found_file">Dosya bulunamadı!</string>
 </resources>

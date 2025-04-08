@@ -8,6 +8,7 @@
     android:background="?android:colorBackground"
     tools:context=".ui.DownloadsFragment">
 
+    <!-- Üstteki toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="0dp"
@@ -21,7 +22,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/top_app_bar_menu" />
 
-    <!-- Buraya indirilenler listesi eklenecek -->
+    <!-- İndirme dosyası listesi -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerDownloads"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_downloaded_file" />
+
+    <!-- Liste boşsa gösterilecek uyarı -->
     <TextView
         android:id="@+id/emptyText"
         android:layout_width="wrap_content"
@@ -30,8 +43,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/colorOnBackground"
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32dp"
+        android:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

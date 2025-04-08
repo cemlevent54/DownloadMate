@@ -3,11 +3,17 @@ package com.example.downloadmateapp
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
@@ -23,6 +29,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var buttonInstagram: ImageButton
     private lateinit var buttonYouTube: ImageButton
     private lateinit var buttonTwitter: ImageButton
+    private lateinit var buttonSelectFolder: Button
+    private lateinit var textSelectedPath: TextView
+    private lateinit var folderPickerLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +95,29 @@ class SettingsActivity : AppCompatActivity() {
         )
         SocialHelper.setupSocialButtons(this, buttons)
         SocialHelper.setIconsForTheme(this, buttonInstagram, buttonYouTube, buttonTwitter)
+
+        buttonSelectFolder = findViewById(R.id.buttonSelectFolder)
+        textSelectedPath = findViewById(R.id.textSelectedPath)
+
+        textSelectedPath.text = getString(R.string.text_selected_path)
+
+        buttonSelectFolder.setOnClickListener {
+            try {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                    putExtra(
+                        DocumentsContract.EXTRA_INITIAL_URI,
+                        Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2FDownloadMateDownloads"))
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                ToastHelper.show(this, R.string.toast_cannot_open_folder)
+            }
+        }
+
+
+
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

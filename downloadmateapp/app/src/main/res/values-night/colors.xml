@@ -11,4 +11,7 @@
     <color name="buttonText">#000000</color> <!-- black -->
     <color name="editTextUnderline">#FFFFFF</color>
 
+    <color name="folder_button_background">#FFFFFF</color> <!-- beyaz -->
+    <color name="folder_button_text">#000000</color>
+
 </resources>

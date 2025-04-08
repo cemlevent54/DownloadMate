@@ -16,4 +16,6 @@
     <color name="buttonBackground">#000000</color>
     <color name="buttonText">#FFFFFF</color>
     <color name="editTextUnderline">#6200EE</color>
+    <color name="folder_button_background">#000000</color> <!-- siyah -->
+    <color name="folder_button_text">#FFFFFF</color>
 </resources>
