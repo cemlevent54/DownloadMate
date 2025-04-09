@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "HPCSWxd3hcM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\cemle\\Desktop\\gihubcontrol\\DownloadMate\\desktopapp\\downloadmate\\downloadmate\\downloadmate.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\cemle\\.nuget\\packages\\microsoft.web.webview2\\1.0.3179.45\\microsoft.web.webview2.1.0.3179.45.nupkg.sha512"
+  ],
+  "logs": []
+}

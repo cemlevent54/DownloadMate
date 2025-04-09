@@ -1,0 +1,6 @@
+2025/04/09-22:46:27.804 4f28 Creating DB C:\Users\cemle\Desktop\gihubcontrol\DownloadMate\desktopapp\downloadmate\downloadmate\bin\Debug\net8.0-windows\downloadmate.exe.WebView2\EBWebView\Default\IndexedDB\https_www.instagram.com_0.indexeddb.leveldb since it was missing.
+2025/04/09-22:46:27.815 4f28 Reusing MANIFEST C:\Users\cemle\Desktop\gihubcontrol\DownloadMate\desktopapp\downloadmate\downloadmate\bin\Debug\net8.0-windows\downloadmate.exe.WebView2\EBWebView\Default\IndexedDB\https_www.instagram.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/04/09-22:46:30.095 96ac Level-0 table #5: started
+2025/04/09-22:46:30.098 96ac Level-0 table #5: 7418 bytes OK
+2025/04/09-22:46:30.099 96ac Delete type=0 #3
+2025/04/09-22:46:30.100 4f28 Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)

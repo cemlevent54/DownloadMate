@@ -1,0 +1,12 @@
+setup/
+
+setup/FFmpeg/bin/ffmpeg.exe
+setup/FFmpeg/bin/ffmpeg.exe 
+
+buildwithffmpegcheck.py
+
+build/
+dist/
+main.spec
+compilescript.iss
+icon.ico
