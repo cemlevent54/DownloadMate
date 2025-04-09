@@ -124,9 +124,9 @@ class HomeFragment : Fragment() {
         }
 
 
-        binding.buttonOpenDownload.setOnClickListener {
-            FolderHelper.openOrSelectDownloadFolder(requireActivity(), downloadFolderLauncher)
-        }
+//        binding.buttonOpenDownload.setOnClickListener {
+//            FolderHelper.openOrSelectDownloadFolder(requireActivity(), downloadFolderLauncher)
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
