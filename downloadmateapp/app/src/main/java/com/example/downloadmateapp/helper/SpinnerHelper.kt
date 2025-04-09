@@ -71,4 +71,19 @@ object SpinnerHelper {
         }
     }
 
+    fun setupTypeSpinnerOnly(
+        context: Context,
+        spinnerType: Spinner
+    ) {
+        val types = listOf(
+            context.getString(R.string.select_option),
+            context.getString(R.string.type_video),
+            context.getString(R.string.type_audio)
+        )
+
+        spinnerType.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, types)
+            .also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+    }
+
+
 }

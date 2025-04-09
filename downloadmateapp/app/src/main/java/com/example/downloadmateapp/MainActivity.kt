@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragmentContainer, HomeFragment())
                 .commit()
         }
+        handleSharedIntentIfAvailable()
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNav.setOnItemSelectedListener { item ->
@@ -88,5 +89,27 @@ class MainActivity : AppCompatActivity() {
         val updatedContext = LocaleHelper.applySavedLocale(newBase)
         super.attachBaseContext(updatedContext)
     }
+
+    private fun handleSharedIntentIfAvailable() {
+        val intentAction = intent?.action
+        val intentType = intent?.type
+
+        if (Intent.ACTION_SEND == intentAction && intentType == "text/plain") {
+            val sharedUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
+            if (!sharedUrl.isNullOrEmpty()) {
+                val bundle = Bundle().apply {
+                    putString("shared_url", sharedUrl)
+                }
+                val homeFragment = HomeFragment().apply {
+                    arguments = bundle
+                }
+
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, homeFragment)
+                    .commit()
+            }
+        }
+    }
+
 }
 

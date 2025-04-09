@@ -80,7 +80,7 @@ class DownloadsFragment : Fragment() {
 
         val files = downloadFolder.listFiles { file ->
             file.extension.equals("mp4", ignoreCase = true) || file.extension.equals("mp3", ignoreCase = true)
-        }?.toList() ?: emptyList()
+        }?.sortedByDescending { it.lastModified() } ?: emptyList()
 
         if (files.isNotEmpty()) {
             binding.emptyText.visibility = View.GONE

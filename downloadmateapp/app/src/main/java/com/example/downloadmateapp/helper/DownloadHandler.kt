@@ -22,7 +22,7 @@ object DownloadHandler {
         onError: (String) -> Unit,
         onClearInputs: () -> Unit
     ) {
-        if (platform == "seçiniz" || type == "seçiniz" || url.isBlank()) {
+        if (platform.isBlank() || type == "seçiniz" || url.isBlank()) {
             ToastHelper.show(context, com.example.downloadmateapp.R.string.msg_fill_all_fields)
             return
         }
