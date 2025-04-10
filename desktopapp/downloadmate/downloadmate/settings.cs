@@ -20,17 +20,13 @@ namespace downloadmate
             InitializeComponent();
 
             previousForm = callingForm;
+
+            FormHelper.SetupForm(this);
         }
 
         private Form previousForm;
 
-        public void gotoBack()
-        {
-            previousForm.Show();
-            ThemeManager.ApplyTheme(previousForm);
-            this.Close();
-        }
-
+        
 
         private void btnBack_Click(object sender, EventArgs e)
         {
@@ -39,66 +35,34 @@ namespace downloadmate
 
         private void btnYoutube_Click(object sender, EventArgs e)
         {
-            gotoYoutubeLogin();
+            HandleYoutubeLogin();
         }
 
-        private void gotoYoutubeLogin()
+        private void cmbBoxSelectLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            YoutubeLoginForm form = new YoutubeLoginForm();
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                string rawCookieString = form.CookieString;
-
-                //  Filtrele
-                string filtered = helper.CookieHelper.FilterYoutubeCookies(rawCookieString);
-
-                //  Kalıcı kaydet
-                GlobalCookies.SaveYouTubeCookies(filtered);
-
-                MessageBox.Show(LanguageHelper.GetString("CookiesSaved"));
-            }
+            ApplySelectedLanguage();
         }
 
         private void btnInstagram_Click(object sender, EventArgs e)
         {
-            gotoInstagramLogin();
+            HandleInstagramLogin();
         }
-
-        private void gotoInstagramLogin()
-        {
-            InstagramLoginForm form = new InstagramLoginForm();
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                string rawCookie = form.CookieString;
-                string filtered = helper.CookieHelper.FilterInstagramCookies(rawCookie);
-
-                GlobalCookies.SaveInstagramCookies(filtered);
-                MessageBox.Show(LanguageHelper.GetString("CookiesSavedInstagram"));
-            }
-        }
-
-        private void btnTwitter_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
 
         private void btnOpenDownloads_Click(object sender, EventArgs e)
         {
-            string folderPath = helper.DownloadPathHelper.GetDownloadDirectory();
-
-            if (Directory.Exists(folderPath))
-            {
-                System.Diagnostics.Process.Start("explorer.exe", folderPath);
-            }
-            else
-            {
-                MessageBox.Show(LanguageHelper.GetString("DownloadFolderMissing"));
-            }
+            OpenDownloadFolder();
         }
 
         private void settings_Load(object sender, EventArgs e)
+        {
+            LoadSettings();
+        }
+        private void cmbBoxSelectTheme_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplySelectedTheme();
+        }
+
+        private void LoadSettings()
         {
             var settings = SettingsManager.Load();
 
@@ -120,6 +84,49 @@ namespace downloadmate
             ApplyLocalization();
         }
 
+        private void HandleYoutubeLogin()
+        {
+            YoutubeLoginForm form = new YoutubeLoginForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                string rawCookieString = form.CookieString;
+
+                //  Filtrele
+                string filtered = helper.CookieHelper.FilterYoutubeCookies(rawCookieString);
+
+                //  Kalıcı kaydet
+                GlobalCookies.SaveYouTubeCookies(filtered);
+
+                MessageBox.Show(LanguageHelper.GetString("CookiesSaved"));
+            }
+        }
+
+        private void HandleInstagramLogin()
+        {
+            InstagramLoginForm form = new InstagramLoginForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                string rawCookie = form.CookieString;
+                string filtered = helper.CookieHelper.FilterInstagramCookies(rawCookie);
+
+                GlobalCookies.SaveInstagramCookies(filtered);
+                MessageBox.Show(LanguageHelper.GetString("CookiesSavedInstagram"));
+            }
+        }
+
+        private void OpenDownloadFolder()
+        {
+            string folderPath = helper.DownloadPathHelper.GetDownloadDirectory();
+            if (Directory.Exists(folderPath))
+            {
+                Process.Start("explorer.exe", folderPath);
+            }
+            else
+            {
+                MessageBox.Show(LanguageHelper.GetString("DownloadFolderMissing"));
+            }
+        }
+
         private void ApplyLocalization()
         {
             lblSelectLanguage.Text = LanguageHelper.GetString("SelectLanguage");
@@ -129,36 +136,59 @@ namespace downloadmate
             btnYoutube.Text = LanguageHelper.GetString("YoutubeLogin");
             btnInstagram.Text = LanguageHelper.GetString("InstagramLogin");
             btnOpenDownloads.Text = LanguageHelper.GetString("OpenDownloads");
+            lblSettings.Text = LanguageHelper.GetString("Settings");
             this.Text = LanguageHelper.GetString("Settings");
         }
 
-
-        private void cmbBoxSelectTheme_SelectedIndexChanged(object sender, EventArgs e)
+        private void ApplySelectedTheme()
         {
-            if (cmbBoxSelectTheme.SelectedItem == null) return;
+            string selectedTheme = cmbBoxSelectTheme.SelectedItem?.ToString() ?? "Light";
 
-            string selectedTheme = cmbBoxSelectTheme.SelectedItem.ToString();
             if (Enum.TryParse<AppTheme>(selectedTheme, out var theme))
             {
                 ThemeHelper.ApplyTheme(this, theme);
+                ThemeHelper.CurrentTheme = theme;
+
                 var settings = SettingsManager.Load();
                 settings.Theme = selectedTheme;
                 SettingsManager.Save(settings);
             }
         }
 
-        private void cmbBoxSelectLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        private void ApplySelectedLanguage()
         {
             string selectedLang = cmbBoxSelectLanguage.SelectedItem?.ToString() ?? "tr";
-
             LanguageHelper.SetLanguage(selectedLang);
+
             var settings = SettingsManager.Load();
             settings.Language = selectedLang;
             SettingsManager.Save(settings);
 
-            // Formu yeniden başlat
             ApplyLocalization();
+        }
 
+        public void gotoBack()
+        {
+            var settings = SettingsManager.Load();
+
+            // Tema ve dil uygula
+            LanguageHelper.SetLanguage(settings.Language);
+
+            if (previousForm is main mainForm)
+            {
+                // Tema ayarını da yükle
+                if (Enum.TryParse(settings.Theme, out AppTheme theme))
+                {
+                    ThemeHelper.ApplyTheme(mainForm, theme);
+                    ThemeHelper.CurrentTheme = theme;
+                }
+
+                // UI elemanlarını güncelle
+                mainForm.RefreshUI();
+            }
+
+            previousForm.Show();
+            this.Close();
         }
     }
 }

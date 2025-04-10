@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("downloadmate")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7b5bad2b3f149f7796d610fe30d69e7a5665ca95")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ee9d0b7772136490cbbba2fad480bb0961d9f35")]
 [assembly: System.Reflection.AssemblyProductAttribute("downloadmate")]
 [assembly: System.Reflection.AssemblyTitleAttribute("downloadmate")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

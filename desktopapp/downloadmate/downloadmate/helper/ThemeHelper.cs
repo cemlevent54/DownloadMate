@@ -31,6 +31,8 @@ namespace downloadmate.helper
                 control.BackColor = (control is Button || control is ComboBox || control is TextBox)
                     ? Color.FromArgb(theme == AppTheme.Dark ? 45 : 255, theme == AppTheme.Dark ? 45 : 255, theme == AppTheme.Dark ? 45 : 255)
                     : backColor;
+
+                FontManager.ApplyFont(control);
             }
         }
     }

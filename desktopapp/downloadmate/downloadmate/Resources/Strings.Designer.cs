@@ -61,6 +61,15 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ses.
+        /// </summary>
+        internal static string Audio {
+            get {
+                return ResourceManager.GetString("Audio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Geri.
         /// </summary>
         internal static string Back {
@@ -70,7 +79,7 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Çerez kaydedildi!.
+        ///   Looks up a localized string similar to Cerez kaydedildi!.
         /// </summary>
         internal static string CookiesSaved {
             get {
@@ -79,7 +88,7 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to instagram çerezi kaydedildi!.
+        ///   Looks up a localized string similar to instagram cerezi kaydedildi!.
         /// </summary>
         internal static string CookiesSavedInstagram {
             get {
@@ -115,7 +124,7 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hata oluştu:.
+        ///   Looks up a localized string similar to Hata olustu:.
         /// </summary>
         internal static string ErrorOccurred {
             get {
@@ -142,7 +151,16 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dosyaları Aç.
+        ///   Looks up a localized string similar to DownloadMate.
+        /// </summary>
+        internal static string Main {
+            get {
+                return ResourceManager.GetString("Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to İndirilenler.
         /// </summary>
         internal static string OpenDownloads {
             get {
@@ -151,7 +169,7 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dosyayı Aç.
+        ///   Looks up a localized string similar to Dosyayı Ac.
         /// </summary>
         internal static string OpenFile {
             get {
@@ -160,7 +178,7 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Yeniden Adlandır:.
+        ///   Looks up a localized string similar to Adlandır:.
         /// </summary>
         internal static string RenameFile {
             get {
@@ -205,7 +223,7 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sosyal Medya Girişi:.
+        ///   Looks up a localized string similar to Sosyal Medya Girisi:.
         /// </summary>
         internal static string SocialLogin {
             get {
@@ -214,11 +232,20 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sosyal Medya Girişi.
+        ///   Looks up a localized string similar to Sosyal Medya Girisi.
         /// </summary>
         internal static string SocialMediaLogin {
             get {
                 return ResourceManager.GetString("SocialMediaLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DownloadMate.
+        /// </summary>
+        internal static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
         
@@ -228,6 +255,15 @@ namespace downloadmate.Resources {
         internal static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to video.
+        /// </summary>
+        internal static string Video {
+            get {
+                return ResourceManager.GetString("Video", resourceCulture);
             }
         }
         

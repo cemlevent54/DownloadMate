@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(settings));
             lblSettings = new Label();
             btnBack = new Button();
             lblSelectLanguage = new Label();
@@ -43,12 +44,12 @@
             // 
             // lblSettings
             // 
-            lblSettings.AutoSize = false;
-            lblSettings.Size = new Size(200, 30);
             lblSettings.Location = new Point(230, 34);
             lblSettings.Name = "lblSettings";
-            lblSettings.TextAlign = ContentAlignment.MiddleCenter;
+            lblSettings.Size = new Size(200, 30);
+            lblSettings.TabIndex = 16;
             lblSettings.Text = "Settings";
+            lblSettings.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnBack
             // 
@@ -62,28 +63,28 @@
             // 
             // lblSelectLanguage
             // 
-            lblSelectLanguage.AutoSize = false;
-            lblSelectLanguage.Size = new Size(200, 35);
             lblSelectLanguage.Location = new Point(32, 110);
             lblSelectLanguage.Name = "lblSelectLanguage";
+            lblSelectLanguage.Size = new Size(200, 35);
+            lblSelectLanguage.TabIndex = 15;
             lblSelectLanguage.Text = "Select Language:";
             lblSelectLanguage.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lblSelectTheme
             // 
-            lblSelectTheme.AutoSize = false;
-            lblSelectTheme.Size = new Size(200, 35);
             lblSelectTheme.Location = new Point(32, 170);
             lblSelectTheme.Name = "lblSelectTheme";
+            lblSelectTheme.Size = new Size(200, 35);
+            lblSelectTheme.TabIndex = 14;
             lblSelectTheme.Text = "Select Theme:";
             lblSelectTheme.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label1 (Social Media Login)
+            // label1
             // 
-            label1.AutoSize = false;
-            label1.Size = new Size(200, 35);
             label1.Location = new Point(32, 240);
             label1.Name = "label1";
+            label1.Size = new Size(200, 35);
+            label1.TabIndex = 13;
             label1.Text = "Social Media Login:";
             label1.TextAlign = ContentAlignment.MiddleRight;
             // 
@@ -91,7 +92,7 @@
             // 
             btnInstagram.Location = new Point(250, 240);
             btnInstagram.Name = "btnInstagram";
-            btnInstagram.Size = new Size(140, 38);
+            btnInstagram.Size = new Size(154, 38);
             btnInstagram.TabIndex = 5;
             btnInstagram.Text = "Instagram";
             btnInstagram.UseVisualStyleBackColor = true;
@@ -99,9 +100,9 @@
             // 
             // btnYoutube
             // 
-            btnYoutube.Location = new Point(410, 240);
+            btnYoutube.Location = new Point(421, 240);
             btnYoutube.Name = "btnYoutube";
-            btnYoutube.Size = new Size(140, 38);
+            btnYoutube.Size = new Size(151, 38);
             btnYoutube.TabIndex = 6;
             btnYoutube.Text = "Youtube";
             btnYoutube.UseVisualStyleBackColor = true;
@@ -109,19 +110,19 @@
             // 
             // lblOpenDownloads
             // 
-            lblOpenDownloads.AutoSize = false;
-            lblOpenDownloads.Size = new Size(200, 35);
             lblOpenDownloads.Location = new Point(32, 320);
             lblOpenDownloads.Name = "lblOpenDownloads";
+            lblOpenDownloads.Size = new Size(200, 35);
+            lblOpenDownloads.TabIndex = 12;
             lblOpenDownloads.Text = "Open Downloads:";
             lblOpenDownloads.TextAlign = ContentAlignment.MiddleRight;
             // 
             // btnOpenDownloads
             // 
             btnOpenDownloads.Location = new Point(250, 320);
+            btnOpenDownloads.MinimumSize = new Size(120, 0);
             btnOpenDownloads.Name = "btnOpenDownloads";
             btnOpenDownloads.Size = new Size(140, 38);
-            btnOpenDownloads.MinimumSize = new Size(120, 0);
             btnOpenDownloads.TabIndex = 9;
             btnOpenDownloads.Text = "Open";
             btnOpenDownloads.UseVisualStyleBackColor = true;
@@ -129,26 +130,28 @@
             // 
             // cmbBoxSelectLanguage
             // 
+            cmbBoxSelectLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbBoxSelectLanguage.DropDownWidth = 250;
             cmbBoxSelectLanguage.FormattingEnabled = true;
             cmbBoxSelectLanguage.Location = new Point(250, 110);
             cmbBoxSelectLanguage.Name = "cmbBoxSelectLanguage";
-            cmbBoxSelectLanguage.Size = new Size(200, 35);
+            cmbBoxSelectLanguage.Size = new Size(200, 31);
             cmbBoxSelectLanguage.TabIndex = 10;
-            cmbBoxSelectLanguage.DropDownWidth = 250;
             cmbBoxSelectLanguage.SelectedIndexChanged += cmbBoxSelectLanguage_SelectedIndexChanged;
             // 
             // cmbBoxSelectTheme
             // 
+            cmbBoxSelectTheme.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbBoxSelectTheme.FormattingEnabled = true;
             cmbBoxSelectTheme.Location = new Point(250, 170);
             cmbBoxSelectTheme.Name = "cmbBoxSelectTheme";
-            cmbBoxSelectTheme.Size = new Size(200, 35);
+            cmbBoxSelectTheme.Size = new Size(200, 31);
             cmbBoxSelectTheme.TabIndex = 11;
             cmbBoxSelectTheme.SelectedIndexChanged += cmbBoxSelectTheme_SelectedIndexChanged;
             // 
-            // settings (Form)
+            // settings
             // 
-            AutoScaleDimensions = new SizeF(10F, 22F);
+            AutoScaleDimensions = new SizeF(9F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(600, 450);
             Controls.Add(cmbBoxSelectTheme);
@@ -163,7 +166,11 @@
             Controls.Add(btnBack);
             Controls.Add(lblSettings);
             Font = new Font("Segoe UI", 10F);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "settings";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Settings";
             Load += settings_Load;
             ResumeLayout(false);

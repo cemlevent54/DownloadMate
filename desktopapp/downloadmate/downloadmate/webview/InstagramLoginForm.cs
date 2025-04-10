@@ -1,4 +1,5 @@
-﻿using System;
+﻿using downloadmate.helper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,6 +19,7 @@ namespace downloadmate.webview
         {
             InitializeComponent();
             InitializeAsync();
+            FormHelper.SetupForm(this);
         }
 
         private async void InitializeAsync()

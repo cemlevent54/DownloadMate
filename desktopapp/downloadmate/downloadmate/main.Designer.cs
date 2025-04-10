@@ -1,4 +1,6 @@
-﻿namespace downloadmate
+﻿using downloadmate.helper;
+
+namespace downloadmate
 {
     partial class main
     {
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(main));
             txtBoxUrl = new TextBox();
             cmbBoxType = new ComboBox();
             txtBoxFileRename = new TextBox();
@@ -50,6 +53,7 @@
             // 
             // cmbBoxType
             // 
+            cmbBoxType.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbBoxType.Font = new Font("Segoe UI", 12F);
             cmbBoxType.FormattingEnabled = true;
             cmbBoxType.Location = new Point(160, 130);
@@ -79,7 +83,7 @@
             // btnOpenDownloads
             // 
             btnOpenDownloads.Font = new Font("Segoe UI", 10F);
-            btnOpenDownloads.Location = new Point(390, 450);
+            btnOpenDownloads.Location = new Point(390, 410);
             btnOpenDownloads.Name = "btnOpenDownloads";
             btnOpenDownloads.Size = new Size(170, 45);
             btnOpenDownloads.TabIndex = 4;
@@ -89,47 +93,47 @@
             // 
             // lblUrl
             // 
-            lblUrl.AutoSize = false;
-            lblUrl.Size = new Size(140, 30);
             lblUrl.Location = new Point(10, 80);
             lblUrl.Name = "lblUrl";
+            lblUrl.Size = new Size(140, 30);
+            lblUrl.TabIndex = 13;
             lblUrl.Text = "Input URL:";
             lblUrl.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lblHeader
             // 
-            lblHeader.AutoSize = false;
-            lblHeader.Size = new Size(400, 30);
-            lblHeader.Location = new Point(100, 20);
             lblHeader.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            lblHeader.Location = new Point(100, 20);
             lblHeader.Name = "lblHeader";
-            lblHeader.TextAlign = ContentAlignment.MiddleCenter;
+            lblHeader.Size = new Size(400, 30);
+            lblHeader.TabIndex = 12;
             lblHeader.Text = "DownloadMate Desktop App";
+            lblHeader.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lbType
             // 
-            lbType.AutoSize = false;
-            lbType.Size = new Size(140, 30);
             lbType.Location = new Point(10, 130);
             lbType.Name = "lbType";
+            lbType.Size = new Size(140, 30);
+            lbType.TabIndex = 11;
             lbType.Text = "Type:";
             lbType.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lblRename
             // 
-            lblRename.AutoSize = false;
-            lblRename.Size = new Size(140, 30);
             lblRename.Location = new Point(10, 180);
             lblRename.Name = "lblRename";
+            lblRename.Size = new Size(140, 30);
+            lblRename.TabIndex = 10;
             lblRename.Text = "Rename File:";
             lblRename.TextAlign = ContentAlignment.MiddleRight;
             // 
             // btnSettings
             // 
             btnSettings.Font = new Font("Segoe UI", 10F);
-            btnSettings.Location = new Point(470, 20);
+            btnSettings.Location = new Point(69, 410);
             btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(100, 35);
+            btnSettings.Size = new Size(130, 45);
             btnSettings.TabIndex = 9;
             btnSettings.Text = "Settings";
             btnSettings.UseVisualStyleBackColor = true;
@@ -137,24 +141,27 @@
             // 
             // main
             // 
-            AutoScaleDimensions = new SizeF(9F, 22F);
+            AutoScaleDimensions = new SizeF(9F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(600, 550);
+            Controls.Add(btnOpenDownloads);
             Controls.Add(btnSettings);
             Controls.Add(lblRename);
             Controls.Add(lbType);
             Controls.Add(lblHeader);
             Controls.Add(lblUrl);
-            Controls.Add(btnOpenDownloads);
             Controls.Add(btnDownload);
             Controls.Add(txtBoxFileRename);
             Controls.Add(cmbBoxType);
             Controls.Add(txtBoxUrl);
             Font = new Font("Segoe UI", 10F);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "main";
             Text = "Main";
+            Activated += main_Activated;
             Load += main_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

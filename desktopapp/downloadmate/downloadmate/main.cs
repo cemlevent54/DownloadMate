@@ -12,9 +12,35 @@ namespace downloadmate
             LanguageHelper.SetLanguage(settings.Language); // ?? Ýlk olarak burada çaðrýlmalý
             InitializeComponent();
             ThemeHelper.ApplyTheme(this, ThemeHelper.CurrentTheme);
+            FormHelper.SetupForm(this);
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
+        {
+            gotoSettingsPage();
+        }
+
+        private void main_Load(object sender, EventArgs e)
+        {
+            InitializeUI();
+        }
+
+        private async void btnDownload_ClickAsync(object sender, EventArgs e)
+        {
+            await HandleDownload();
+        }
+
+        private void btnOpenDownloads_Click(object sender, EventArgs e)
+        {
+            OpenDownloadFolder();
+        }
+
+        private void main_Activated(object sender, EventArgs e)
+        {
+            ApplySettings();
+        }
+
+        private void pctrBoxSettings_Click(object sender, EventArgs e)
         {
             gotoSettingsPage();
         }
@@ -31,8 +57,8 @@ namespace downloadmate
             List<string> options = new List<string>()
             {
                 LanguageHelper.GetString("SelectOption"), // "Seçiniz" / "Select"
-                "audio", // bu sabit kalabilir
-                "video"
+                LanguageHelper.GetString("Audio"),
+                LanguageHelper.GetString("Video"), 
             };
 
             cmbBoxType.DataSource = options;
@@ -40,7 +66,7 @@ namespace downloadmate
             cmbBoxType.SelectedIndex = 0;
         }
 
-        private void main_Load(object sender, EventArgs e)
+        private void InitializeUI()
         {
             setupCombobox();
 
@@ -66,13 +92,13 @@ namespace downloadmate
             }));
         }
 
-        private async void btnDownload_ClickAsync(object sender, EventArgs e)
+        private async Task HandleDownload()
         {
             string url = txtBoxUrl.Text.Trim();
             string type = cmbBoxType.SelectedItem.ToString();
             string fileName = txtBoxFileRename.Text.Trim();
 
-            var cookies = GlobalCookies.LoadYouTubeCookies();  // ? çerezi oku
+            var cookies = GlobalCookies.LoadYouTubeCookies();
 
             var client = new DownloaderClient();
             try
@@ -86,7 +112,7 @@ namespace downloadmate
             }
         }
 
-        private void btnOpenDownloads_Click(object sender, EventArgs e)
+        private void OpenDownloadFolder()
         {
             string folderPath = helper.DownloadPathHelper.GetDownloadDirectory();
 
@@ -99,5 +125,58 @@ namespace downloadmate
                 MessageBox.Show(LanguageHelper.GetString("DownloadFolderMissing"));
             }
         }
+
+
+        private void ApplySettings()
+        {
+            var settings = SettingsManager.Load();
+            LanguageHelper.SetLanguage(settings.Language);
+
+            if (Enum.TryParse(settings.Theme, out AppTheme theme))
+            {
+                ThemeHelper.ApplyTheme(this, theme);
+                ThemeHelper.CurrentTheme = theme;
+            }
+
+            UpdateLabels();
+            setupCombobox();
+        }
+
+        private void UpdateLabels()
+        {
+            lbType.Text = LanguageHelper.GetString("Type");
+            lblUrl.Text = LanguageHelper.GetString("InputUrl");
+            lblRename.Text = LanguageHelper.GetString("RenameFile");
+            btnDownload.Text = LanguageHelper.GetString("Download");
+            btnSettings.Text = LanguageHelper.GetString("Settings");
+            btnOpenDownloads.Text = LanguageHelper.GetString("OpenDownloads");
+            lblHeader.Text = LanguageHelper.GetString("Title");
+            this.Text = LanguageHelper.GetString("Main");
+        }
+
+
+        public void RefreshUI()
+        {
+            var settings = SettingsManager.Load();
+
+            LanguageHelper.SetLanguage(settings.Language);
+
+            if (Enum.TryParse(settings.Theme, out AppTheme theme))
+            {
+                ThemeHelper.ApplyTheme(this, theme);
+                ThemeHelper.CurrentTheme = theme;
+            }
+
+            lbType.Text = LanguageHelper.GetString("Type");
+            lblUrl.Text = LanguageHelper.GetString("InputUrl");
+            lblRename.Text = LanguageHelper.GetString("RenameFile");
+            btnDownload.Text = LanguageHelper.GetString("Download");
+            btnSettings.Text = LanguageHelper.GetString("Settings");
+            btnOpenDownloads.Text = LanguageHelper.GetString("OpenDownloads");
+
+            setupCombobox();
+        }
+
+        
     }
 }
