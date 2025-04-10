@@ -37,5 +37,20 @@ namespace downloadmate.webview
         {
             return File.Exists(instagramCookiePath) ? File.ReadAllText(instagramCookiePath) : null;
         }
+
+        public static void SaveTwitterCookies(string cookieString)
+        {
+            string path = Path.Combine("twitterDownloads", "twitter_cookies.txt");
+            Directory.CreateDirectory("twitterDownloads"); // klasör yoksa oluştur
+
+            File.WriteAllText(path, cookieString);
+            Console.WriteLine($"[🍪] Twitter çerezi kaydedildi: {path}");
+        }
+
+        public static string? LoadTwitterCookies()
+        {
+            string path = Path.Combine("twitterDownloads", "twitter_cookies.txt");
+            return File.Exists(path) ? File.ReadAllText(path) : null;
+        }
     }
 }

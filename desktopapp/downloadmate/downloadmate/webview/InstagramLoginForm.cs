@@ -20,6 +20,14 @@ namespace downloadmate.webview
             InitializeComponent();
             InitializeAsync();
             FormHelper.SetupForm(this);
+
+            this.Text = LanguageHelper.GetString("InstagramLoginForm_Title");
+            btnExtractCookies.Text = LanguageHelper.GetString("ExtractCookiesButton");
+        }
+
+        private async void btnExtractCookies_Click(object sender, EventArgs e)
+        {
+            extractCookies();
         }
 
         private async void InitializeAsync()
@@ -28,7 +36,9 @@ namespace downloadmate.webview
             webView.CoreWebView2.Navigate("https://www.instagram.com/accounts/login/");
         }
 
-        private async void btnExtractCookies_Click(object sender, EventArgs e)
+        
+
+        private async void extractCookies()
         {
             var cookieManager = webView.CoreWebView2.CookieManager;
             var cookies = await cookieManager.GetCookiesAsync("https://www.instagram.com");
@@ -40,7 +50,7 @@ namespace downloadmate.webview
 
             CookieString = string.Join("; ", filtered);
 
-            MessageBox.Show("Çerezler başarıyla alındı:\n\n" + CookieString);
+            MessageBox.Show(LanguageHelper.GetString("InstagramCookiesSuccess"));
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

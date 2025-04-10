@@ -106,7 +106,7 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to indirme tamamlandı:.
+        ///   Looks up a localized string similar to ✅ İndirme tamamlandı.
         /// </summary>
         internal static string DownloadCompleted {
             get {
@@ -124,11 +124,29 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ❌ Bir hata oluştu:.
+        /// </summary>
+        internal static string ErrorOccured {
+            get {
+                return ResourceManager.GetString("ErrorOccured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hata olustu:.
         /// </summary>
         internal static string ErrorOccurred {
             get {
                 return ResourceManager.GetString("ErrorOccurred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Çerezleri Al.
+        /// </summary>
+        internal static string ExtractCookiesButton {
+            get {
+                return ResourceManager.GetString("ExtractCookiesButton", resourceCulture);
             }
         }
         
@@ -142,11 +160,29 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Çerezler başarıyla alındı:.
+        /// </summary>
+        internal static string InstagramCookiesSuccess {
+            get {
+                return ResourceManager.GetString("InstagramCookiesSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Instagram.
         /// </summary>
         internal static string InstagramLogin {
             get {
                 return ResourceManager.GetString("InstagramLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instagram Giriş Yap.
+        /// </summary>
+        internal static string InstagramLoginForm_Title {
+            get {
+                return ResourceManager.GetString("InstagramLoginForm_Title", resourceCulture);
             }
         }
         
@@ -250,6 +286,24 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Çerezler başarıyla alındı:.
+        /// </summary>
+        internal static string TwitterCookiesSuccess {
+            get {
+                return ResourceManager.GetString("TwitterCookiesSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitter Giriş Yap.
+        /// </summary>
+        internal static string TwitterLoginForm_Title {
+            get {
+                return ResourceManager.GetString("TwitterLoginForm_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tür:.
         /// </summary>
         internal static string Type {
@@ -268,11 +322,29 @@ namespace downloadmate.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Çerezler başarıyla alındı:.
+        /// </summary>
+        internal static string YoutubeCookiesSuccess {
+            get {
+                return ResourceManager.GetString("YoutubeCookiesSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Youtube.
         /// </summary>
         internal static string YoutubeLogin {
             get {
                 return ResourceManager.GetString("YoutubeLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Giriş Yap.
+        /// </summary>
+        internal static string YoutubeLoginForm_Title {
+            get {
+                return ResourceManager.GetString("YoutubeLoginForm_Title", resourceCulture);
             }
         }
     }

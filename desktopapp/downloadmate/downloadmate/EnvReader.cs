@@ -40,8 +40,8 @@ namespace downloadmate
                 }
             }
 
-            Console.WriteLine("[✅] .env dosyası yüklendi.");
-            MessageBox.Show("[✅] .env dosyası yüklendi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //Console.WriteLine("[✅] .env dosyası yüklendi.");
+            //MessageBox.Show("[✅] .env dosyası yüklendi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
 

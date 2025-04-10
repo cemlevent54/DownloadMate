@@ -105,6 +105,7 @@ namespace downloadmate
             {
                 string filePath = await client.DownloadFileAsync("youtube", url, type, cookies, fileName);
                 MessageBox.Show($"{LanguageHelper.GetString("DownloadCompleted")}\n{filePath}");
+                clearFields();
             }
             catch (Exception ex)
             {
@@ -126,7 +127,7 @@ namespace downloadmate
             }
         }
 
-
+        
         private void ApplySettings()
         {
             var settings = SettingsManager.Load();
@@ -175,6 +176,13 @@ namespace downloadmate
             btnOpenDownloads.Text = LanguageHelper.GetString("OpenDownloads");
 
             setupCombobox();
+        }
+
+        private void clearFields()
+        {
+            txtBoxFileRename.Text = string.Empty;
+            txtBoxUrl.Text = string.Empty;
+            cmbBoxType.SelectedIndex = 0;
         }
 
         

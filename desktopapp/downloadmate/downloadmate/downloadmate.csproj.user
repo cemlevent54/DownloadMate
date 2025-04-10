@@ -10,6 +10,9 @@
     <Compile Update="webview\InstagramLoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="webview\TwitterLoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="webview\YoutubeLoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

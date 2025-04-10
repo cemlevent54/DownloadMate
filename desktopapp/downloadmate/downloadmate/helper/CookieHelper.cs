@@ -54,5 +54,26 @@ namespace downloadmate.helper
 
             return string.Join("; ", filtered);
         }
+
+        public static string FilterTwitterCookies(string rawCookies)
+        {
+            string[] requiredKeys = { "auth_token", "ct0", "gt", "guest_id" };
+
+            var parts = rawCookies.Split(';')
+                                  .Select(part => part.Trim())
+                                  .Where(part => requiredKeys.Any(key => part.StartsWith(key + "=", StringComparison.OrdinalIgnoreCase)))
+                                  .ToList();
+
+            var foundKeys = parts.Select(p => p.Split('=')[0]).ToList();
+            var missing = requiredKeys.Except(foundKeys);
+
+            if (missing.Any())
+            {
+                //System.Windows.Forms.MessageBox.Show("⚠️ Eksik Twitter çerezi:\n" + string.Join(", ", missing), "Uyarı");
+            }
+
+            return string.Join("; ", parts);
+        }
+
     }
 }

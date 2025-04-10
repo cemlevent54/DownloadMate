@@ -37,3 +37,4 @@ C:\Users\cemle\Desktop\gihubcontrol\DownloadMate\desktopapp\downloadmate\downloa
 C:\Users\cemle\Desktop\gihubcontrol\DownloadMate\desktopapp\downloadmate\downloadmate\bin\Debug\net8.0-windows\Resources\icons\settings_icon_dark.png
 C:\Users\cemle\Desktop\gihubcontrol\DownloadMate\desktopapp\downloadmate\downloadmate\bin\Debug\net8.0-windows\Resources\icons\settings_icon_light.png
 C:\Users\cemle\Desktop\gihubcontrol\DownloadMate\desktopapp\downloadmate\downloadmate\bin\Debug\net8.0-windows\Resources\icons\icon.ico
+C:\Users\cemle\Desktop\gihubcontrol\DownloadMate\desktopapp\downloadmate\downloadmate\obj\Debug\net8.0-windows\downloadmate.webview.TwitterLoginForm.resources

@@ -26,7 +26,7 @@ namespace downloadmate
 
         private Form previousForm;
 
-        
+
 
         private void btnBack_Click(object sender, EventArgs e)
         {
@@ -46,6 +46,11 @@ namespace downloadmate
         private void btnInstagram_Click(object sender, EventArgs e)
         {
             HandleInstagramLogin();
+        }
+
+        private void btnTwitter_Click(object sender, EventArgs e)
+        {
+            HandleTwitterLogin();
         }
 
         private void btnOpenDownloads_Click(object sender, EventArgs e)
@@ -111,6 +116,21 @@ namespace downloadmate
 
                 GlobalCookies.SaveInstagramCookies(filtered);
                 MessageBox.Show(LanguageHelper.GetString("CookiesSavedInstagram"));
+            }
+        }
+
+        private void HandleTwitterLogin()
+        {
+            TwitterLoginForm form = new TwitterLoginForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                string rawCookieString = form.CookieString;
+
+                // Çerezleri kaydet
+                string filtered = helper.CookieHelper.FilterTwitterCookies(rawCookieString);
+                GlobalCookies.SaveTwitterCookies(filtered);
+
+                MessageBox.Show(LanguageHelper.GetString("CookiesSavedTwitter"));
             }
         }
 
@@ -190,5 +210,7 @@ namespace downloadmate
             previousForm.Show();
             this.Close();
         }
+
+        
     }
 }

@@ -30,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YoutubeLoginForm));
             webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             btnExtractCookies = new Button();
             ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
@@ -65,6 +66,7 @@
             ClientSize = new Size(596, 641);
             Controls.Add(btnExtractCookies);
             Controls.Add(webView);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
             Name = "YoutubeLoginForm";
             Text = "YouTube Giriş Yap";

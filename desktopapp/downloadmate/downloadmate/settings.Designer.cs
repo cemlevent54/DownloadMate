@@ -40,6 +40,7 @@
             btnOpenDownloads = new Button();
             cmbBoxSelectLanguage = new ComboBox();
             cmbBoxSelectTheme = new ComboBox();
+            btnTwitter = new Button();
             SuspendLayout();
             // 
             // lblSettings
@@ -110,7 +111,7 @@
             // 
             // lblOpenDownloads
             // 
-            lblOpenDownloads.Location = new Point(32, 320);
+            lblOpenDownloads.Location = new Point(32, 357);
             lblOpenDownloads.Name = "lblOpenDownloads";
             lblOpenDownloads.Size = new Size(200, 35);
             lblOpenDownloads.TabIndex = 12;
@@ -119,7 +120,7 @@
             // 
             // btnOpenDownloads
             // 
-            btnOpenDownloads.Location = new Point(250, 320);
+            btnOpenDownloads.Location = new Point(250, 354);
             btnOpenDownloads.MinimumSize = new Size(120, 0);
             btnOpenDownloads.Name = "btnOpenDownloads";
             btnOpenDownloads.Size = new Size(140, 38);
@@ -149,11 +150,22 @@
             cmbBoxSelectTheme.TabIndex = 11;
             cmbBoxSelectTheme.SelectedIndexChanged += cmbBoxSelectTheme_SelectedIndexChanged;
             // 
+            // btnTwitter
+            // 
+            btnTwitter.Location = new Point(250, 284);
+            btnTwitter.Name = "btnTwitter";
+            btnTwitter.Size = new Size(154, 39);
+            btnTwitter.TabIndex = 17;
+            btnTwitter.Text = "Twitter";
+            btnTwitter.UseVisualStyleBackColor = true;
+            btnTwitter.Click += btnTwitter_Click;
+            // 
             // settings
             // 
             AutoScaleDimensions = new SizeF(9F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(600, 450);
+            Controls.Add(btnTwitter);
             Controls.Add(cmbBoxSelectTheme);
             Controls.Add(cmbBoxSelectLanguage);
             Controls.Add(btnOpenDownloads);
@@ -189,5 +201,6 @@
         private Button btnOpenDownloads;
         private ComboBox cmbBoxSelectLanguage;
         private ComboBox cmbBoxSelectTheme;
+        private Button btnTwitter;
     }
 }
