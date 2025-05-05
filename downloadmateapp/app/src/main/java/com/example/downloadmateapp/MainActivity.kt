@@ -45,6 +45,7 @@ import com.example.downloadmateapp.helper.ThemeHelper
 import com.example.downloadmateapp.helper.ToastHelper
 import com.example.downloadmateapp.ui.DownloadsFragment
 import com.example.downloadmateapp.ui.HomeFragment
+import com.example.downloadmateapp.ui.SettingsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.InputStream
 import java.util.Locale
@@ -77,6 +78,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_downloads -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, DownloadsFragment())
+                        .commit()
+                    true
+                }
+                R.id.nav_settings -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, SettingsFragment())
                         .commit()
                     true
                 }
