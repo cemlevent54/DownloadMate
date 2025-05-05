@@ -35,6 +35,8 @@
     <string name="platform_youtube">YouTube</string>
     <string name="platform_instagram">Instagram</string>
     <string name="platform_twitter">Twitter</string>
+    <string name="platform_facebook">Facebook</string>
+    <string name="platform_tiktok">TikTok</string>
 
     <!-- Toast Mesaj-->
     <string name="msg_fill_all_fields">⚠️ Lütfen tüm alanları doldurun</string>
@@ -69,4 +71,5 @@
     <string name="text_no_downloads">Henüz bir indirme bulunamadı.</string>
     <string name="play">Oynat</string>
     <string name="toast_no_found_file">Dosya bulunamadı!</string>
+
 </resources>

@@ -3,6 +3,7 @@ package com.example.downloadmateapp.helper
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.example.downloadmateapp.R
 import com.example.downloadmateapp.api.RetrofitClient
 import com.example.downloadmateapp.network.DownloadRequest
 import okhttp3.ResponseBody
@@ -23,20 +24,23 @@ object DownloadHandler {
         onClearInputs: () -> Unit
     ) {
         if (platform.isBlank() || type == "seçiniz" || url.isBlank()) {
-            ToastHelper.show(context, com.example.downloadmateapp.R.string.msg_fill_all_fields)
+            ToastHelper.show(context, R.string.msg_fill_all_fields)
             return
         }
 
         progressBar.visibility = View.VISIBLE
         val request = DownloadRequest(url = url, type = type)
 
+        // Cookie gerektiren platformlar burada tanımlanır
+        val platformsRequiringCookies = listOf("youtube", "instagram", "twitter")
+
         lifecycleScope.launchWhenStarted {
             try {
                 val cookies = context.getSharedPreferences("cookies", Context.MODE_PRIVATE)
                     .getString("cookies_$platform", null)
 
-                if (cookies.isNullOrEmpty()) {
-                    ToastHelper.long(context, com.example.downloadmateapp.R.string.msg_cookie_missing, platform)
+                if (platform in platformsRequiringCookies && cookies.isNullOrEmpty()) {
+                    ToastHelper.long(context, R.string.msg_cookie_missing, platform)
                     progressBar.visibility = View.GONE
                     return@launchWhenStarted
                 }
@@ -45,6 +49,8 @@ object DownloadHandler {
                     "youtube" -> RetrofitClient.apiService.downloadYoutube(request, cookies)
                     "instagram" -> RetrofitClient.apiService.downloadInstagram(request, cookies)
                     "twitter" -> RetrofitClient.apiService.downloadTwitter(request, cookies)
+                    "tiktok" -> RetrofitClient.apiService.downloadTiktok(request)
+                    "facebook" -> RetrofitClient.apiService.downloadFacebook(request)
                     else -> null
                 }
 

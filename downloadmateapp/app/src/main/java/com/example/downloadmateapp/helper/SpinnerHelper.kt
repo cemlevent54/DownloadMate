@@ -19,7 +19,10 @@ object SpinnerHelper {
             context.getString(R.string.select_option),
             context.getString(R.string.platform_youtube),
             context.getString(R.string.platform_instagram),
-            context.getString(R.string.platform_twitter)
+            context.getString(R.string.platform_twitter),
+            context.getString(R.string.platform_tiktok),
+            context.getString(R.string.platform_facebook),
+
         )
 
         val types = listOf(
@@ -42,6 +45,8 @@ object SpinnerHelper {
                     context.getString(R.string.platform_youtube).lowercase() -> setDownloadButtonColor(Color.parseColor("#FF0000"), null)
                     context.getString(R.string.platform_twitter).lowercase() -> setDownloadButtonColor(Color.parseColor("#1DA1F2"), null)
                     context.getString(R.string.platform_instagram).lowercase() -> setDownloadButtonColor(Color.parseColor("#c13584"), null)
+                    context.getString(R.string.platform_facebook).lowercase() -> setDownloadButtonColor(Color.parseColor("#4267B2"), null)
+                    context.getString(R.string.platform_tiktok).lowercase() -> setDownloadButtonColor(Color.parseColor("#69C9D0"), null)
                     context.getString(R.string.select_option).lowercase() -> {
                         val bgColor = if (isNightMode) Color.WHITE else Color.BLACK
                         val textColor = if (isNightMode) Color.BLACK else Color.WHITE
@@ -67,6 +72,8 @@ object SpinnerHelper {
             1 -> "youtube"
             2 -> "instagram"
             3 -> "twitter"
+            4 -> "tiktok"
+            5 -> "facebook"
             else -> ""
         }
     }

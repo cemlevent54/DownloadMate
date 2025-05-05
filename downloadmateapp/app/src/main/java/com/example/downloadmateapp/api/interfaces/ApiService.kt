@@ -29,4 +29,14 @@ interface ApiService {
         @Body request: DownloadRequest,
         @Header("Cookie") cookie: String?
     ): Response<ResponseBody>
+
+    @POST("/tiktok/download")
+    suspend fun downloadTiktok(
+        @Body request: DownloadRequest
+    ): Response<ResponseBody>
+
+    @POST("/facebook/download")
+    suspend fun downloadFacebook(
+        @Body request: DownloadRequest
+    ): Response<ResponseBody>
 }
