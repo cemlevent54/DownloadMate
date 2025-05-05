@@ -1,0 +1,8 @@
+__pycache__/
+
+# ignore the following files
+tiktokDownloads/   
+instagramDownloads/
+facebookDownloads/
+youtubeDownloads/
+twitterDownloads/

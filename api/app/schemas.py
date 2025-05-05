@@ -17,3 +17,13 @@ class InstagramDownloadRequest(BaseModel):
     url: str
     type: Literal['video', 'audio']  # 'video' ya da 'audio' dışında bir değer almaz
     cookies: Optional[str] = None  # <-- burası yeni
+
+class TikTokDownloadRequest(BaseModel):
+    url: str
+    type: Literal['video', 'audio']  # 'video' ya da 'audio' dışında bir değer almaz
+    cookies: Optional[str] = None  # <-- burası yeni
+    
+class FacebookDownloadRequest(BaseModel):
+    url: str
+    type: Literal['video', 'audio']  # 'video' ya da 'audio' dışında bir değer almaz
+    cookies: Optional[str] = None  # <-- burası yeni

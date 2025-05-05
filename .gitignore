@@ -2,3 +2,7 @@ installationscriptfile.iss
 
 DownloadMateInstaller
 Output
+try/
+.pyc
+
+__pycache__/

@@ -4,9 +4,11 @@ load_dotenv()
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.youtube.downloader import YoutubeDownloadAPI
-from app.schemas import YouTubeDownloadRequest, InstagramDownloadRequest, TwitterDownloadRequest  # Sadece YouTubeDownloadRequest'yi import ediyoruz
+from app.schemas import FacebookDownloadRequest, TikTokDownloadRequest, YouTubeDownloadRequest, InstagramDownloadRequest, TwitterDownloadRequest  # Sadece YouTubeDownloadRequest'yi import ediyoruz
 from app.instagram.downloader import InstagramDownloadAPI
 from app.twitter.downloader import TwitterDownloadAPI
+from app.tiktok.downloader import TiktokDownloadAPI
+from app.facebook.downloader import FacebookDownloadAPI
 from fastapi.responses import FileResponse
 import os
 from fastapi.logger import logger
@@ -15,12 +17,24 @@ from fastapi import Request  # <--- request nesnesini alabilmek için
 
 
 app = FastAPI()
+
+app = FastAPI(
+    title="Downloader API",
+    description="API to download media from various platforms.",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+
 downloader = YoutubeDownloadAPI()
 instagram_downloader = InstagramDownloadAPI()
 twitter_downloader = TwitterDownloadAPI()
+tiktok_downloader = TiktokDownloadAPI()
+facebook_downloader = FacebookDownloadAPI()
 @app.get("/")
 def root():
-    return {"message": "API is working ✅"}
+    return {"message": "API is workings ✅"}
 
 @app.post("/sample")
 async def sample():
@@ -65,8 +79,6 @@ async def youtube_download(request: YouTubeDownloadRequest, fastapi_request: Req
     
 
 # instagram indirme isteği için endpoint
-
-
 @app.post("/instagram/download")
 async def instagram_download(request: InstagramDownloadRequest, fastapi_request: Request):
     try:
@@ -109,6 +121,42 @@ async def twitter_download(request: TwitterDownloadRequest):
     try:
         # İndirme işlemi başlatılır
         result = twitter_downloader.download(request.url, request.type)
+
+        # İndirme işlemi başarıyla tamamlandıysa dosyayı kullanıcıya döndür
+        if result:
+            if request.type == "audio":
+                return FileResponse(result, media_type="audio/mp3", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
+            elif request.type == "video":
+                return FileResponse(result, media_type="video/mp4", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
+        
+        raise HTTPException(status_code=500, detail="Video indirilemedi.")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/tiktok/download")
+async def tiktok_download(request: TikTokDownloadRequest):
+    try:
+        # İndirme işlemi başlatılır
+        result = tiktok_downloader.download(request.url, request.type)
+
+        # İndirme işlemi başarıyla tamamlandıysa dosyayı kullanıcıya döndür
+        if result:
+            if request.type == "audio":
+                return FileResponse(result, media_type="audio/mp3", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
+            elif request.type == "video":
+                return FileResponse(result, media_type="video/mp4", headers={"Content-Disposition": f"attachment; filename={os.path.basename(result)}"})
+        
+        raise HTTPException(status_code=500, detail="Video indirilemedi.")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/facebook/download")
+async def facebook_download(request: FacebookDownloadRequest):
+    try:
+        # İndirme işlemi başlatılır
+        result = facebook_downloader.download(request.url, request.type)
 
         # İndirme işlemi başarıyla tamamlandıysa dosyayı kullanıcıya döndür
         if result:
