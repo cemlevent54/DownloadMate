@@ -38,6 +38,7 @@
     <string name="platform_facebook">Facebook</string>
     <string name="platform_tiktok">TikTok</string>
 
+
     <!-- Toast Mesaj-->
     <string name="msg_fill_all_fields">⚠️ Lütfen tüm alanları doldurun</string>
     <string name="msg_cookies_missing">Lütfen önce %1$s hesabınıza giriş yaparak çerez alın!</string>
@@ -71,5 +72,6 @@
     <string name="text_no_downloads">Henüz bir indirme bulunamadı.</string>
     <string name="play">Oynat</string>
     <string name="toast_no_found_file">Dosya bulunamadı!</string>
+    <string name="msg_download_started">İndirme başlatıldı!</string>
 
 </resources>

@@ -2,6 +2,8 @@ package com.example.downloadmateapp.helper
 
 import android.content.Context
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import com.example.downloadmateapp.R
 import okhttp3.ResponseBody
@@ -33,7 +35,10 @@ object DownloadHelper {
             } else {
                 "✅ File saved: ${file.absolutePath}"
             }
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            // ⚠️ UI işlemi ana thread’e post ediliyor
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            }
             android.util.Log.d("DownloadMate", msg)
 
             file

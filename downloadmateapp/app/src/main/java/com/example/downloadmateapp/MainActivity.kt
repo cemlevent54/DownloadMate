@@ -2,6 +2,7 @@ package com.example.downloadmateapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
@@ -57,6 +58,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ThemeHelper.applySavedTheme(this)
         WindowCompat.setDecorFitsSystemWindows(window, true)
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
+            }
+        }
+
 
         // Varsayılan olarak HomeFragment göster
         if (savedInstanceState == null) {

@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import com.example.downloadmateapp.R
 import com.example.downloadmateapp.SettingsActivity
 import com.example.downloadmateapp.databinding.FragmentHomeBinding
 import com.example.downloadmateapp.helper.*
+import com.example.downloadmateapp.service.DownloadService
 
 class HomeFragment : Fragment() {
 
@@ -101,26 +103,26 @@ class HomeFragment : Fragment() {
             val type = SpinnerHelper.getTypeCodeAt(binding.spinnerType.selectedItemPosition)
             val fileName = binding.editTextFileName.text.toString().trim()
 
-            DownloadHandler.handleDownload(
-                context = requireContext(),
-                lifecycleScope = viewLifecycleOwner.lifecycleScope,
-                url = urlInput,
-                platform = platform,
-                type = type,
-                fileNameInput = fileName,
-                progressBar = binding.progressBar,
-                onSuccess = { file ->
-                    ToastHelper.long(requireContext(), R.string.msg_saved_file, file.name)
-                },
-                onError = { message ->
-                    ToastHelper.long(requireContext(), R.string.msg_api_error, message)
-                },
-                onClearInputs = {
-                    binding.editTextUrl.text.clear()
-                    binding.editTextFileName.text.clear()
-                    binding.spinnerType.setSelection(0)
-                }
-            )
+            if (platform.isBlank() || type == "seçiniz" || urlInput.isBlank()) {
+                ToastHelper.show(requireContext(), R.string.msg_fill_all_fields)
+                return@setOnClickListener
+            }
+
+            val intent = Intent(requireContext(), DownloadService::class.java).apply {
+                putExtra("url", urlInput)
+                putExtra("platform", platform)
+                putExtra("type", type)
+                putExtra("fileName", fileName)
+            }
+
+            ContextCompat.startForegroundService(requireContext(), intent)
+
+            // UI temizliği
+            binding.editTextUrl.text.clear()
+            binding.editTextFileName.text.clear()
+            binding.spinnerType.setSelection(0)
+
+            ToastHelper.long(requireContext(), R.string.msg_download_started)
         }
 
 

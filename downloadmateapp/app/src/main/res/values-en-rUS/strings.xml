@@ -69,5 +69,6 @@
     <string name="toast_cannot_open_folder">Unable to open folder.</string>
     <string name="text_no_downloads">No downloads found.</string>
     <string name="toast_no_found_file">File not found!</string>
+    <string name="msg_download_started">Download started!</string>
     <string name="play">Play</string>
 </resources>
